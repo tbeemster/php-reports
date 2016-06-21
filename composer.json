@@ -8,6 +8,10 @@
         {
             "name": "Jeremy Dorn",
             "email": "jeremy@jeremydorn.com"
+        },
+        {
+            "name": "Timothe Beemster",
+            "email": "timothe@yard.nl"
         }
     ],
     "require": {
@@ -21,7 +25,8 @@
         "phpoffice/phpexcel": "dev-develop",
         "adodb/adodb-php": "dev-master",
         "lespoilus/spyc": "dev-master",
-        "google/apiclient": "1.0.*@beta"
+        "google/apiclient": "1.0.*@beta",
+        "propel/propel": "~2.0@dev"
     },
     "autoload": {
         "files": [
