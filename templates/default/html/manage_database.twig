@@ -1,0 +1,64 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Configure{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ base }}/public/css/report_list.css"/>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Configuration</h2>
+            <ol class="nav bs-sidenav">
+                <li>
+                    <a href="#Step 1">Manage Data Sources</a>
+                </li>
+                <li class="active">
+                    <a href="/configure/saturn">Manage Tables</a>
+                </li>
+                <li>
+                    <a href="#Step 3">Join Tables</a>
+                </li>
+            </ol>
+        </div>
+
+        <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
+            <h1 class="visible-phone">All Reports</h1>
+            <div class="well well-small" style="height: 300px; overflow-y: scroll; padding: 5px;">
+                <table cellpadding="5" cellspacing="2" border="1" rules="all">
+                    <thead>
+                    <tr>
+                        <th>Table</th>
+                        <th>Rows</th>
+                        <th>Columns</th>
+                        <th>Hidden</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tab in tables %}
+                        <tr>
+                            <td>{{ tab.Table }}</td>
+                            <td>{{ tab.RowCount }}</td>
+                            <td>{{ tab.ColumnCount }}</td>
+                            <td>
+                                {{ tab.Hidden }}
+                                {% if tab.Hidden == true %}
+                                    <a href="show/{{ tab.Table }}"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                {% else %}
+                                    <a href="hide/{{ tab.Table }}"><i class="glyphicon glyphicon-eye-close"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

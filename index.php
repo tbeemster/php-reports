@@ -60,6 +60,21 @@ Flight::route('/',function() {
 	PhpReports::listReports();
 });
 
+Flight::route('/configure', function () {
+	PhpReports::configure();
+});
+
+Flight::route('POST /configure/database', function () {
+	$request = Flight::request();
+	$dmbs = $request->data['dmbs'];
+	$host = $request->data['host'];
+	$database_name = $request->data['database_name'];
+	$username = $request->data['username'];
+	$password = $request->data['password'];
+	$manageDatabase = new ManageDatabase($dmbs, $host, $database_name, $username, $password);
+	echo $manageDatabase->configureTables();
+});
+
 Flight::route('/dashboards',function() {
 	PhpReports::listDashboards();
 });

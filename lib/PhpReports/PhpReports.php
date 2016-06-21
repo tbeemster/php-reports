@@ -257,6 +257,18 @@ class PhpReports {
 		echo self::render('html/report_list',$template_vars);
 	}
 
+	public static function configure() {
+		$errors = array();
+
+		$reports = self::getReports(self::$config['reportDir'] . '/', $errors);
+
+		$template_vars['reports'] = $reports;
+		$template_vars['report_errors'] = $errors;
+
+		$start = microtime(true);
+		echo self::render('html/configure', $template_vars);
+	}
+
 	public static function listDashboards() {
 		$dashboards = self::getDashboards();
 
