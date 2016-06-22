@@ -1,4 +1,8 @@
 <?php
+use PhpReports\HeaderBase;
+use PhpReports\PhpReports;
+use PhpReports\Report;
+
 class IncludeHeader extends HeaderBase {
 	static $validation = array(
 		'report'=>array(

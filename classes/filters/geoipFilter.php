@@ -1,5 +1,7 @@
 <?php
-class geoipFilter extends FilterBase {	
+use PhpReports\FilterBase;
+
+class geoipFilter extends FilterBase {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		$record = geoip_record_by_name($value->getValue());
 		

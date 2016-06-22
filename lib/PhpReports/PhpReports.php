@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 use PhpReports\Model\DatabaseSourceQuery;
 
 class PhpReports {
@@ -13,16 +15,16 @@ class PhpReports {
 
 	public static function init($config = 'config/config.php') {
 		//set up our autoloader
-		spl_autoload_register(array('PhpReports','loader'),true,true);
+		spl_autoload_register(array('PhpReports\PhpReports', 'loader'), true, true);
 
 		if(!file_exists($config)) {
-			throw new Exception("Cannot find config file");
+			throw new \Exception("Cannot find config file");
 		}
 
 		// The config.php.sample is used to populate default values should the config.php be incomplete.
 		// As a result, we require it be there.
 		if(!file_exists('config/config.php.sample')) {
-			throw new Exception("Cannot find sample config. Please leave config/config.php.sample in place for default values.");
+			throw new \Exception("Cannot find sample config. Please leave config/config.php.sample in place for default values.");
 		}
 
 		$default_config = include('config/config.php.sample');
@@ -30,7 +32,7 @@ class PhpReports {
 
 		self::$config = array_merge($default_config, $config);
 
-		self::$request = Flight::request();
+		self::$request = \Flight::request();
 
 		$path = self::$request->base;
 
@@ -47,13 +49,13 @@ class PhpReports {
 		$template_dirs = array('templates/default','templates');
 		if(file_exists('templates/local')) array_unshift($template_dirs, 'templates/local');
 
-		$loader = new Twig_Loader_Chain(array(
-			new Twig_Loader_Filesystem($template_dirs),
-			new Twig_Loader_String()
+		$loader = new \Twig_Loader_Chain(array(
+			new \Twig_Loader_Filesystem($template_dirs),
+			new \Twig_Loader_String()
 		));
-		self::$twig = new Twig_Environment($loader);
-		self::$twig->addFunction(new Twig_SimpleFunction('dbdate', 'PhpReports::dbdate'));
-		self::$twig->addFunction(new Twig_SimpleFunction('sqlin', 'PhpReports::generateSqlIN'));
+		self::$twig = new \Twig_Environment($loader);
+		self::$twig->addFunction(new \Twig_SimpleFunction('dbdate', 'PhpReports::dbdate'));
+		self::$twig->addFunction(new \Twig_SimpleFunction('sqlin', 'PhpReports::generateSqlIN'));
 
 		if(isset($_COOKIE['reports-theme']) && $_COOKIE['reports-theme']) {
 			$theme = $_COOKIE['reports-theme'];
@@ -64,12 +66,12 @@ class PhpReports {
 		self::$twig->addGlobal('theme', $theme);
 		self::$twig->addGlobal('path', $path);
 
-		self::$twig->addFilter('var_dump', new Twig_Filter_Function('var_dump'));
+		self::$twig->addFilter('var_dump', new \Twig_Filter_Function('var_dump'));
 
-		self::$twig_string = new Twig_Environment(new Twig_Loader_String(), array('autoescape'=>false));
-		self::$twig_string->addFunction(new Twig_SimpleFunction('sqlin', 'PhpReports::generateSqlIN'));
+		self::$twig_string = new \Twig_Environment(new \Twig_Loader_String(), array('autoescape' => false));
+		self::$twig_string->addFunction(new \Twig_SimpleFunction('sqlin', 'PhpReports::generateSqlIN'));
 
-		FileSystemCache::$cacheDir = self::$config['cacheDir'];
+		\FileSystemCache::$cacheDir = self::$config['cacheDir'];
 
 		if(!isset($_SESSION['environment']) || !isset(self::$config['environments'][$_SESSION['environment']])) {
 			$_SESSION['environment'] = array_shift(array_keys(self::$config['environments']));
@@ -184,13 +186,13 @@ class PhpReports {
 		try {
 			if(!class_exists($classname)) {
 				$error_header = 'Unknown report format';
-				throw new Exception("Unknown report format '$type'");
+				throw new \Exception("Unknown report format '$type'");
 			}
 
 			try {
 				$report = $classname::prepareReport($report);
 			}
-			catch(Exception $e) {
+			catch (\Exception $e) {
 				$error_header = 'An error occurred while preparing your report';
 				throw $e;
 			}
@@ -201,7 +203,7 @@ class PhpReports {
 				$content = $report->options['Query_Formatted'];
 			}
 		}
-		catch(Exception $e) {
+		catch (\Exception $e) {
 			echo self::render('html/page',array(
 				'title'=>$report->report,
 				'header'=>'<h2>'.$error_header.'</h2>',
@@ -226,7 +228,7 @@ class PhpReports {
 			);
 		}
 		//if there is an error parsing the report
-		catch(Exception $e) {
+		catch (\Exception $e) {
 			$template_vars = array(
 				'report'=>$report,
 				'contents'=>Report::getReportFileContents($report),
@@ -237,7 +239,7 @@ class PhpReports {
 		}
 
 		if(isset($_POST['preview'])) {
-			echo "<pre>".SimpleDiff::htmlDiffSummary($template_vars['contents'],$_POST['contents'])."</pre>";
+			echo "<pre>" . \SimpleDiff::htmlDiffSummary($template_vars['contents'], $_POST['contents']) . "</pre>";
 		}
 		elseif(isset($_POST['save'])) {
 			Report::setReportFileContents($template_vars['report'],$_POST['contents']);
@@ -301,14 +303,14 @@ class PhpReports {
 	public static function getDashboard($dashboard) {
 		$file = PhpReports::$config['dashboardDir'].'/'.$dashboard.'.json';
 		if(!file_exists($file)) {
-			throw new Exception("Unknown dashboard - ".$dashboard);
+			throw new \Exception("Unknown dashboard - " . $dashboard);
 		}
 
 		return json_decode(file_get_contents($file),true);
 	}
 
 	public static function getRecentReports() {
-		$recently_run = FileSystemCache::retrieve(FileSystemCache::generateCacheKey('recently_run'));
+		$recently_run = \FileSystemCache::retrieve(\FileSystemCache::generateCacheKey('recently_run'));
 		$recent = array();
 		if($recently_run !== false) {
 			$i = 0;
@@ -334,7 +336,7 @@ class PhpReports {
 		}
 
 		//weight by popular reports
-		$recently_run = FileSystemCache::retrieve(FileSystemCache::generateCacheKey('recently_run'));
+		$recently_run = \FileSystemCache::retrieve(\FileSystemCache::generateCacheKey('recently_run'));
 		$popular = array();
 		if($recently_run !== false) {
 			foreach($recently_run as $report) {
@@ -378,7 +380,7 @@ class PhpReports {
 	}
 
 	protected static function getReportHeaders($report) {
-		$cacheKey = FileSystemCache::generateCacheKey(array(self::$request->base, $report),'report_headers');
+		$cacheKey = \FileSystemCache::generateCacheKey(array(self::$request->base, $report), 'report_headers');
 
 		//check if report data is cached and newer than when the report file was created
 		//the url parameter ?nocache will bypass this and not use cache
@@ -389,7 +391,7 @@ class PhpReports {
 			return false;
 		}
 		if(!isset($_REQUEST['nocache'])) {
-			$data = FileSystemCache::retrieve($cacheKey, filemtime($loc));
+			$data = \FileSystemCache::retrieve($cacheKey, filemtime($loc));
 		}
 
 		//report data not cached, need to parse it
@@ -405,7 +407,7 @@ class PhpReports {
 			if(!isset($data['Name'])) $data['Name'] = ucwords(str_replace(array('_','-'),' ',basename($report)));
 
 			//store parsed report in cache
-			FileSystemCache::store($cacheKey, $data);
+			\FileSystemCache::store($cacheKey, $data);
 		}
 
 		return $data;
@@ -455,7 +457,7 @@ class PhpReports {
 					$data = self::getReportHeaders($name,$base);
 					$return[] = $data;
 				}
-				catch(Exception $e) {
+				catch (\Exception $e) {
 					if(!$errors) $errors = array();
 					$errors[] = array(
 						'report'=>$name,
@@ -518,7 +520,7 @@ class PhpReports {
 		$email_html = "<p>$body</p>$table<p>View the report online at <a href=\"".htmlentities($link)."\">".htmlentities($link)."</a></p>";
 
 		// Create the message
-		$message = Swift_Message::newInstance()
+		$message = \Swift_Message::newInstance()
 		  ->setSubject($subject)
 		  ->setFrom($from)
 		  ->setTo($email)
@@ -528,7 +530,7 @@ class PhpReports {
 		  ->addPart($email_html, 'text/html')
 		;
 
-		$attachment = Swift_Attachment::newInstance()
+		$attachment = \Swift_Attachment::newInstance()
 			->setFilename('report.csv')
 			->setContentType('text/csv')
 			->setBody($csv)
@@ -538,13 +540,13 @@ class PhpReports {
 
 		// Create the Transport
 		$transport = self::getMailTransport();
-		$mailer = Swift_Mailer::newInstance($transport);
+		$mailer = \Swift_Mailer::newInstance($transport);
 
 		try {
 			// Send the message
 			$result = $mailer->send($message);
 		}
-		catch(Exception $e) {
+		catch (\Exception $e) {
 			echo json_encode(array(
 				'error'=>$e->getMessage()
 			));
@@ -572,14 +574,16 @@ class PhpReports {
 
 		switch(PhpReports::$config['mail_settings']['method']) {
 			case 'mail':
-				return Swift_MailTransport::newInstance();
+				return \Swift_MailTransport::newInstance();
 			case 'sendmail':
-				return Swift_MailTransport::newInstance(
+				return \Swift_MailTransport::newInstance(
 					isset(PhpReports::$config['mail_settings']['command'])? PhpReports::$config['mail_settings']['command'] : '/usr/sbin/sendmail -bs'
 				);
 			case 'smtp':
-				if(!isset(PhpReports::$config['mail_settings']['server'])) throw new Exception("SMTP server must be configured");
-				$transport = Swift_SmtpTransport::newInstance(
+				if (!isset(PhpReports::$config['mail_settings']['server'])) {
+					throw new \Exception("SMTP server must be configured");
+				}
+				$transport = \Swift_SmtpTransport::newInstance(
 					PhpReports::$config['mail_settings']['server'],
 					isset(PhpReports::$config['mail_settings']['port'])? PhpReports::$config['mail_settings']['port'] : 25
 				);
@@ -597,7 +601,7 @@ class PhpReports {
 
 				return $transport;
 			default:
-				throw new Exception("Mail method must be either 'mail', 'sendmail', or 'smtp'");
+				throw new \Exception("Mail method must be either 'mail', 'sendmail', or 'smtp'");
 		}
 	}
 

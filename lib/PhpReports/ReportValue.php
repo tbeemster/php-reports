@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 class ReportValue {
 	public $key;
 	public $i;

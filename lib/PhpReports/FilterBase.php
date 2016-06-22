@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 abstract class FilterBase {	
 	/**
 	 * Filter a datapoint in the report

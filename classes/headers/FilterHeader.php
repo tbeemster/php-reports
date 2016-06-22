@@ -1,4 +1,6 @@
 <?php
+use PhpReports\HeaderBase;
+
 class FilterHeader extends HeaderBase {
 	static $validation = array(
 		'column'=>array(

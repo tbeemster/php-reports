@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class JsonReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {		
 		header("Content-type: application/json");

@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class CsvReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {
 		//always use cache for CSV reports

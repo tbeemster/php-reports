@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class TextReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {
 		header("Content-type: text/plain");

@@ -1,7 +1,9 @@
 <?php
 // for build-in php server serve the requested resource as-is.
+use PhpReports\ManageDatabase;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
+use PhpReports\PhpReports;
 
 if (php_sapi_name() == 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
     return false;
@@ -16,9 +18,6 @@ ini_set('max_execution_time', 300);
 include 'vendor/autoload.php';
 
 require_once 'generated-conf/config.php';
-
-//sets up autoload (looks in classes/local/, classes/, and lib/ in that order)
-require 'lib/PhpReports/PhpReports.php';
 
 header("Access-Control-Allow-Origin: *");
 

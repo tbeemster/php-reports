@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class HtmlReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {
 		

@@ -1,4 +1,6 @@
 <?php
+use PhpReports\HeaderBase;
+
 class FormattingHeader extends HeaderBase {
 	static $validation = array(
 		'limit'=>array(

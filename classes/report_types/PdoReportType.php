@@ -1,4 +1,7 @@
 <?php
+use PhpReports\PhpReports;
+use PhpReports\ReportTypeBase;
+
 class PdoReportType extends ReportTypeBase {
 	public static $default_driver = null;
 

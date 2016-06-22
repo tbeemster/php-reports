@@ -1,4 +1,6 @@
 <?php
+use PhpReports\HeaderBase;
+
 class VariableHeader extends HeaderBase {
 	
 	static $validation = array(

@@ -36,7 +36,7 @@
             "vendor/jdorn/file-system-cache/"
         ],
         "psr-4": {
-            "PhpReports\\": "model/PhpReports/"
+            "PhpReports\\": "lib/PhpReports/"
         }
     },
     "minimum-stability": "dev"

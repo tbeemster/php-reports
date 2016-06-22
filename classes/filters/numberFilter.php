@@ -1,4 +1,6 @@
 <?php
+use PhpReports\FilterBase;
+
 /**
  * Created by JetBrains PhpStorm.
  * User: lrzanek

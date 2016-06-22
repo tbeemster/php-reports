@@ -1,5 +1,8 @@
 <?php
-class dateFilter extends FilterBase {	
+use PhpReports\FilterBase;
+use PhpReports\PhpReports;
+
+class dateFilter extends FilterBase {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		if(!isset($options['format'])) $options['format'] = (isset(PhpReports::$config['default_date_format'])? PhpReports::$config['default_date_format'] : 'Y-m-d H:i:s');
 		if(!isset($options['database'])) $options['database'] = $report->options['Database'];

@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class XmlReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {
 		header("Content-type: application/xml");

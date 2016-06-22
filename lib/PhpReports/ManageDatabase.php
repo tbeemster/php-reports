@@ -1,4 +1,5 @@
 <?php
+namespace PhpReports;
 
 use PhpReports\Model\DatabaseSource;
 

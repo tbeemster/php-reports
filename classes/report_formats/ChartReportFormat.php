@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 class ChartReportFormat extends ReportFormatBase {
 	public static function display(&$report, &$request) {
 		if(!$report->options['has_charts']) return;

@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 abstract class ReportTypeBase {
 	public static function init(&$report) {
 		

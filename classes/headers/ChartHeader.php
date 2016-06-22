@@ -1,4 +1,7 @@
 <?php
+use PhpReports\HeaderBase;
+use PhpReports\ReportValue;
+
 class ChartHeader extends HeaderBase {
 	static $validation = array(
 		'columns'=>array(

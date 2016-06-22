@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 class Report {
 	public $report;
 	public $macros = array();
@@ -21,7 +23,7 @@ class Report {
 		$this->report = $report;
 		
 		if(!file_exists(self::getFileLocation($report))) {
-			throw new Exception('Report not found - '.$report);
+			throw new \Exception('Report not found - ' . $report);
 		}
 		
 		$this->filemtime = filemtime(self::getFileLocation($report));
@@ -33,7 +35,7 @@ class Report {
 		
 		//if there are no headers in this report
 		if(strpos($this->raw,"\n\n") === false) {
-			throw new Exception('Report missing headers - '.$report);
+			throw new \Exception('Report missing headers - ' . $report);
 		}
 		
 		//split the raw report into headers and code
@@ -58,8 +60,10 @@ class Report {
 		if(strpos($report,"..")!==false) {
 			$reportdir = realpath(PhpReports::$config['reportDir']).'/';
 			$reportpath = substr(realpath(PhpReports::$config['reportDir'].'/'.$report),0,strlen($reportdir));
-			
-			if($reportpath !== $reportdir) throw new Exception('Invalid report - '.$report);
+
+			if ($reportpath !== $reportdir) {
+				throw new \Exception('Invalid report - ' . $report);
+			}
 		}
 		
 		$reportDir = PhpReports::$config['reportDir'];
@@ -70,7 +74,7 @@ class Report {
 		echo "SAVING CONTENTS TO ".self::getFileLocation($report);
 		
 		if(!file_put_contents(self::getFileLocation($report),$new_contents)) {
-			throw new Exception("Failed to set report contents");
+			throw new \Exception("Failed to set report contents");
 		}
 		
 		echo "\n".$new_contents;
@@ -105,22 +109,22 @@ class Report {
 	}
 	
 	public function getCacheKey() {
-		return FileSystemCache::generateCacheKey(array(
+		return \FileSystemCache::generateCacheKey(array(
 			'report'=>$this->report,
 			'macros'=>$this->macros,
 			'database'=>$this->options['Environment']
 		),'report_results');
 	}
 	public function getReportTimesCacheKey() {
-		return FileSystemCache::generateCacheKey($this->report,'report_times');
+		return \FileSystemCache::generateCacheKey($this->report, 'report_times');
 	}
 
 	protected function retrieveFromCache() {
 		if(!$this->use_cache) {
 			return false;
 		}
-		
-		return FileSystemCache::retrieve($this->getCacheKey(),'results', $this->filemtime);
+
+		return \FileSystemCache::retrieve($this->getCacheKey(), 'results', $this->filemtime);
 	}
 	
 	protected function storeInCache() {
@@ -131,8 +135,8 @@ class Report {
 			//default to caching things for 10 minutes
 			$ttl = 600;
 		}
-		
-		FileSystemCache::store($this->getCacheKey(), $this->options, 'results', $ttl);
+
+		\FileSystemCache::store($this->getCacheKey(), $this->options, 'results', $ttl);
 	}
 	
 	protected function parseHeaders() {
@@ -208,7 +212,7 @@ class Report {
 			$file_type = array_pop(explode('.',$this->report));
 			
 			if(!isset(PhpReports::$config['default_file_extension_mapping'][$file_type])) {
-				throw new Exception("Unknown report type - ".$this->report);
+				throw new \Exception("Unknown report type - " . $this->report);
 			}
 			else {
 				$this->options['Type'] = PhpReports::$config['default_file_extension_mapping'][$file_type];
@@ -228,7 +232,7 @@ class Report {
 			if(!in_array($name,$this->headers)) $this->headers[] = $name;
 		}
 		else {
-			throw new Exception("Unknown header '$name' - ".$this->report);
+			throw new \Exception("Unknown header '$name' - " . $this->report);
 		}
 	}
 	
@@ -303,7 +307,7 @@ class Report {
 		$classname = $this->options['Type'].'ReportType';
 		
 		if(!class_exists($classname)) {
-			throw new exception("Unknown report type '".$this->options['Type']."'");
+			throw new \Exception("Unknown report type '" . $this->options['Type'] . "'");
 		}
 		
 		$classname::init($this);
@@ -379,7 +383,7 @@ class Report {
 	
 	protected function _runReport() {
 		if(!$this->is_ready) {
-			throw new Exception("Report is not ready.  Missing variables");
+			throw new \Exception("Report is not ready.  Missing variables");
 		}
 		
 		PhpReports::setVar('Report',$this);
@@ -391,7 +395,7 @@ class Report {
 		$classname = $this->options['Type'].'ReportType';
 		
 		if(!class_exists($classname)) {
-			throw new exception("Unknown report type '".$this->options['Type']."'");
+			throw new \Exception("Unknown report type '" . $this->options['Type'] . "'");
 		}
 		
 		foreach($this->headers as $header) {
@@ -449,7 +453,7 @@ class Report {
 	}
 	
 	protected function getTimeEstimate() {
-		$report_times = FileSystemCache::retrieve($this->getReportTimesCacheKey());
+		$report_times = \FileSystemCache::retrieve($this->getReportTimesCacheKey());
 		if(!$report_times) return;
 		
 		sort($report_times);
@@ -565,14 +569,14 @@ class Report {
 			}
 
 			//add this to the list of recently run reports
-			$recently_run_key = FileSystemCache::generateCacheKey('recently_run');
-			$recently_run = FileSystemCache::retrieve($recently_run_key);
+			$recently_run_key = \FileSystemCache::generateCacheKey('recently_run');
+			$recently_run = \FileSystemCache::retrieve($recently_run_key);
 			if($recently_run === false) {
 				$recently_run = array();
 			}
 			array_unshift($recently_run,$this->report);
 			if(count($recently_run) > 200) $recently_run = array_slice($recently_run,0,200);
-			FileSystemCache::store($recently_run_key,$recently_run);
+			\FileSystemCache::store($recently_run_key, $recently_run);
 		}
 		
 		//call the beforeRender callback for each header
@@ -585,7 +589,7 @@ class Report {
 		
 		if($this->is_ready && !$this->async && !isset($this->options['FromCache'])) {
 			//get current report times for this report
-			$report_times = FileSystemCache::retrieve($this->getReportTimesCacheKey());
+			$report_times = \FileSystemCache::retrieve($this->getReportTimesCacheKey());
 			if(!$report_times) $report_times = array();
 			//only keep the last 10 times for each report
 			//this keeps the timing data up to date and relevant
@@ -593,7 +597,7 @@ class Report {
 			
 			//store report times
 			$report_times[] = $this->options['Time'];
-			FileSystemCache::store($this->getReportTimesCacheKey(), $report_times);
+			\FileSystemCache::store($this->getReportTimesCacheKey(), $report_times);
 		}
 		
 		$this->has_run = true;

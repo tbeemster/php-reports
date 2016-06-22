@@ -1,4 +1,6 @@
 <?php
+use PhpReports\FilterBase;
+
 class barFilter extends FilterBase {	
 	public static function filter($value, $options = array(), &$report, &$row) {
 		if(isset($options['width'])) $max = $options['width'];

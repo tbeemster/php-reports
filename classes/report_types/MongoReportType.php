@@ -1,4 +1,7 @@
 <?php
+use PhpReports\PhpReports;
+use PhpReports\ReportTypeBase;
+
 class MongoReportType extends ReportTypeBase {
 	public static function init(&$report) {
 		$environments = PhpReports::$config['environments'];

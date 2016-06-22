@@ -1,5 +1,7 @@
 <?php
-class paddingFilter extends FilterBase {	
+use PhpReports\FilterBase;
+
+class paddingFilter extends FilterBase {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		
 		if($options['direction'] === 'r') {

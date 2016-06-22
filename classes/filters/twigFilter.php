@@ -1,5 +1,8 @@
 <?php
-class twigFilter extends FilterBase {	
+use PhpReports\FilterBase;
+use PhpReports\PhpReports;
+
+class twigFilter extends FilterBase {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		// If this is html
 		$html = isset($options['html'])? $options['html'] : false;

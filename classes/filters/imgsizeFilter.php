@@ -1,5 +1,8 @@
 <?php
-class imgsizeFilter extends FilterBase {	
+use PhpReports\FilterBase;
+use PhpReports\PhpReports;
+
+class imgsizeFilter extends FilterBase {
 	static $default_format = '{{ geometry.width }}x{{ geometry.height }} {{ compression }}, {{ fileSize }}';
 	
 	public static function filter($value, $options = array(), &$report, &$row) {

@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 abstract class ReportFormatBase {
 	abstract public static function display(&$report, &$request);
 	

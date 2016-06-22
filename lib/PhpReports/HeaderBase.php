@@ -1,4 +1,6 @@
 <?php
+namespace PhpReports;
+
 class HeaderBase {
 	static $validation = array();
 	
@@ -17,15 +19,17 @@ class HeaderBase {
 		
 		//if it couldn't be parsed as json, try parsing it as a shortcut form
 		if(!$params) $params = static::parseShortcut($value);
-		
-		if(!$params) throw new Exception("Could not parse header '$key'");
+
+		if (!$params) {
+			throw new \Exception("Could not parse header '$key'");
+		}
 		
 		//run defined validation rules and fill in default params
 		try {
 			$params = static::validate($params);
 		}
-		catch(Exception $e) {
-			throw new Exception($key." Header: ".$e->getMessage());
+		catch (\Exception $e) {
+			throw new \Exception($key . " Header: " . $e->getMessage());
 		}
 		
 		static::init($params, $report);
@@ -89,7 +93,7 @@ class HeaderBase {
 		}
 		
 		if($errors) {
-			throw new Exception(implode(". ",$errors));
+			throw new \Exception(implode(". ", $errors));
 		}
 		else return $params;
 	}

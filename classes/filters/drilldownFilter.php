@@ -1,5 +1,7 @@
 <?php
-class drilldownFilter extends linkFilter {	
+use PhpReports\PhpReports;
+
+class drilldownFilter extends linkFilter {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		if(!isset($options['macros'])) $options['macros'] = array();
 		

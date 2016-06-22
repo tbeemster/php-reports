@@ -1,5 +1,7 @@
 <?php
-class linkFilter extends FilterBase {	
+use PhpReports\FilterBase;
+
+class linkFilter extends FilterBase {
 	public static function filter($value, $options = array(), &$report, &$row) {
 		if(!$value->getValue()) return $value;
 		

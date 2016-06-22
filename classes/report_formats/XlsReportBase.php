@@ -1,4 +1,6 @@
 <?php
+use PhpReports\ReportFormatBase;
+
 abstract class XlsReportBase extends ReportFormatBase {
 	private static function columnLetter($c){
 		$c = intval($c);
