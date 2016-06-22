@@ -1,5 +1,8 @@
 <?php
 // for build-in php server serve the requested resource as-is.
+use PhpReports\Model\DatabaseSource;
+use PhpReports\Model\DatabaseSourceQuery;
+
 if (php_sapi_name() == 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
     return false;
 }
@@ -11,6 +14,8 @@ ini_set('max_execution_time', 300);
 
 //sets up autoloading of composer dependencies
 include 'vendor/autoload.php';
+
+require_once 'generated-conf/config.php';
 
 //sets up autoload (looks in classes/local/, classes/, and lib/ in that order)
 require 'lib/PhpReports/PhpReports.php';
@@ -65,18 +70,47 @@ Flight::route('/configure', function () {
 });
 
 Flight::route('POST /configure/database', function () {
+
 	$request = Flight::request();
-	$dmbs = $request->data['dmbs'];
+	$dbms = $request->data['dbms'];
 	$host = $request->data['host'];
-	$database_name = $request->data['database_name'];
+	$databaseName = $request->data['database_name'];
 	$username = $request->data['username'];
 	$password = $request->data['password'];
-	$manageDatabase = new ManageDatabase($dmbs, $host, $database_name, $username, $password);
+
+	$databaseSource = new DatabaseSource();
+	$databaseSource->setDbms($dbms)->setHost($host)->setDatabaseName($databaseName)->setUsername($username)->setPassword($password);
+
+	$dsn = $databaseSource->getDsn();;
+	try {
+		$manageDatabase = new ManageDatabase($databaseSource);
+	}
+	catch (PDOException $pdoException) {
+		$databaseSource->delete();
+		echo '<h1>Couldn\'t connect to database</h1>';
+		var_dump($pdoException);
+		exit();
+	}
+	$databaseSource->save();
 	echo $manageDatabase->configureTables();
 });
 
-Flight::route('/dashboards',function() {
-	PhpReports::listDashboards();
+Flight::route('GET /configure/@database', function ($database) {
+	$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($database);
+	if (!$databaseSource instanceof DatabaseSource) {
+		echo 'Database ' . $database . ' not found!';
+		exit();
+	}
+	try {
+		$manageDatabase = new ManageDatabase($databaseSource);
+	}
+	catch (PDOException $pdoException) {
+		$databaseSource->delete();
+		echo '<h1>Couldn\'t connect to database</h1>';
+		var_dump($pdoException);
+		exit();
+	}
+	echo $manageDatabase->configureTables();
 });
 
 Flight::route('/dashboard/@name',function($name) {
@@ -115,6 +149,12 @@ Flight::route('/set-environment',function() {
 //email report
 Flight::route('/email',function() {
 	PhpReports::emailReport();	
+});
+
+Flight::route('/@controller/@action', function ($controller, $action) {
+	$controller = new $controller();
+	echo $controller->$action();
+	PhpReports::listDashboards();
 });
 
 Flight::set('flight.handle_errors', false);

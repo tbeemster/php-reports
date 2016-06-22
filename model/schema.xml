@@ -40,7 +40,9 @@
             what their names imply.
         -->
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="dsn" type="varchar" size="255" required="true"/>
+        <column name="dbms" type="varchar" size="255" required="true"/>
+        <column name="host" type="varchar" size="255" required="true"/>
+        <column name="database_name" type="varchar" size="255" required="true"/>
         <column name="username" type="varchar" size="255" required="true"/>
         <column name="password" type="varchar" size="255" required="true"/>
     </table>

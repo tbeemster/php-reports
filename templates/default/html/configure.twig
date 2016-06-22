@@ -28,12 +28,19 @@
         </div>
 
         <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
-            <h1 class="visible-phone">All Reports</h1>
+            <h1 class="visible-phone">All Data Sources</h1>
+            <div class="well well-small">
+                <ul>
+                    {% for dataSource in dataSources %}
+                        <li><a href="configure/{{ dataSource.databaseName }}">{{ dataSource.databaseName }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
             <div class="well well-small">
                 <div>
                     <form action="configure/database" method="POST">
                         <label>Database Management System</label>
-                        <select name="dmbs">
+                        <select name="dbms">
                             <option value="mysql" selected="selected">MySQL</option>
                         </select><br/>
 

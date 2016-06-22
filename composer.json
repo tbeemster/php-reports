@@ -34,7 +34,10 @@
         ],
         "classmap": [
             "vendor/jdorn/file-system-cache/"
-        ]
+        ],
+        "psr-4": {
+            "PhpReports\\": "model/PhpReports/"
+        }
     },
     "minimum-stability": "dev"
 }

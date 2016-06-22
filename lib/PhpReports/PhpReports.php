@@ -1,4 +1,6 @@
 <?php
+use PhpReports\Model\DatabaseSourceQuery;
+
 class PhpReports {
 	public static $config;
 	public static $request;
@@ -258,14 +260,9 @@ class PhpReports {
 	}
 
 	public static function configure() {
-		$errors = array();
+		$dataSources = DatabaseSourceQuery::create()->find();
+		$template_vars['dataSources'] = $dataSources;
 
-		$reports = self::getReports(self::$config['reportDir'] . '/', $errors);
-
-		$template_vars['reports'] = $reports;
-		$template_vars['report_errors'] = $errors;
-
-		$start = microtime(true);
 		echo self::render('html/configure', $template_vars);
 	}
 

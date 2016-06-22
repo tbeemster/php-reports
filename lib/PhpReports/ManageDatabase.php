@@ -1,5 +1,7 @@
 <?php
 
+use PhpReports\Model\DatabaseSource;
+
 class ManageDatabase {
 
 	/** @var PDO */
@@ -7,23 +9,22 @@ class ManageDatabase {
 
 	/**
 	 * ManageDatabase constructor.
-	 * @param string $dmbs
-	 * @param string $host
-	 * @param string $database_name
-	 * @param string $username
-	 * @param string $password
+	 *
+	 * @param DatabaseSource $databaseSource
+	 * @throws PDOException
 	 */
-	public function __construct($dmbs, $host, $database_name, $username, $password) {
+	public function __construct(DatabaseSource $databaseSource) {
 		$database = array(
-			'dsn' => $dmbs . ':host=' . $host . ';dbname=' . $database_name,
-			'user' => $username,
-			'pass' => $password,
+			'dsn' => $databaseSource->getDsn(),
+			'user' => $databaseSource->getUsername(),
+			'pass' => $databaseSource->getPassword(),
 		);
 		$this->database = $this->connect($database);
 	}
 
 	/**
 	 * @param array $database
+	 * @throws PDOException
 	 * @return PDO
 	 */
 	public static function connect(array $database) {

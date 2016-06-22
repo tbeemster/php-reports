@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3b22041274704beaacaad1c8deed29a2",
+    "hash": "3e8342a9e55042918fb9e34a6842a85b",
     "content-hash": "e9ae9ee363abdbb0d17c90f2881c9fe4",
     "packages": [
         {
@@ -858,12 +858,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "4c6bf73b95e1e04bbcb9e8466c43c3870aed9230"
+                "reference": "f4a57f101cba52288567b1114c6c4fa94345239a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/4c6bf73b95e1e04bbcb9e8466c43c3870aed9230",
-                "reference": "4c6bf73b95e1e04bbcb9e8466c43c3870aed9230",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/f4a57f101cba52288567b1114c6c4fa94345239a",
+                "reference": "f4a57f101cba52288567b1114c6c4fa94345239a",
                 "shasum": ""
             },
             "require": {
@@ -924,7 +924,7 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-21 06:41:01"
+            "time": "2016-06-21 08:07:44"
         },
         {
             "name": "symfony/yaml",
