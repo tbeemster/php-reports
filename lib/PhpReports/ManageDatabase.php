@@ -5,14 +5,14 @@ use PhpReports\Model\DatabaseSource;
 
 class ManageDatabase {
 
-	/** @var PDO */
+	/** @var \PDO */
 	protected $database;
 
 	/**
 	 * ManageDatabase constructor.
 	 *
 	 * @param DatabaseSource $databaseSource
-	 * @throws PDOException
+	 * @throws \PDOException
 	 */
 	public function __construct(DatabaseSource $databaseSource) {
 		$database = array(
@@ -25,11 +25,11 @@ class ManageDatabase {
 
 	/**
 	 * @param array $database
-	 * @throws PDOException
-	 * @return PDO
+	 * @throws \PDOException
+	 * @return \PDO
 	 */
 	public static function connect(array $database) {
-		return new PDO($database['dsn'], $database['user'], $database['pass']);
+		return new \PDO($database['dsn'], $database['user'], $database['pass']);
 	}
 
 	public function configureTables() {
@@ -39,14 +39,14 @@ class ManageDatabase {
 
 	protected function getTables() {
 		$result = $this->database->query("SHOW TABLES");
-		$tables = $result->fetchAll(PDO::FETCH_ASSOC);
+		$tables = $result->fetchAll(\PDO::FETCH_ASSOC);
 
 		$i = 0;
 
 		foreach ($tables as $table) {
 			$result = $this->database->query("DESCRIBE " . current($table));
 
-			$columns = $result->fetchAll(PDO::FETCH_ASSOC);
+			$columns = $result->fetchAll(\PDO::FETCH_ASSOC);
 			$rows[$i]['Table'] = current($table);
 			$rows[$i]['ColumnCount'] = count($columns);
 
