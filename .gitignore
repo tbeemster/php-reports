@@ -6,4 +6,5 @@ classes/local/*.php
 templates/local
 vendor/
 propel.yml
-lib/PhpReports/Model/*
+lib/PhpReports/Model/Base/*
+lib/PhpReports/Model/Map/*
