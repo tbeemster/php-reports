@@ -32,13 +32,18 @@
             <div class="well well-small">
                 <ul>
                     {% for dataSource in dataSources %}
-                        <li><a href="configure/{{ dataSource.databaseName }}">{{ dataSource.databaseName }}</a></li>
+                        <li>
+                            <a href="configure/manage-data-source/{{ dataSource.databaseName }}">{{ dataSource.databaseName }}</a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
             <div class="well well-small">
                 <div>
-                    <form action="../action/data-source/add" method="post">
+                    <form action="" method="post">
+                        <input type="hidden" name="subject" value="data-source"/>
+                        <input type="hidden" name="action" value="add"/>
+
                         <label>Database Management System</label>
                         <select name="dbms">
                             <option value="mysql" selected="selected">MySQL</option>

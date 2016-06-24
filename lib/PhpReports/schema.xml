@@ -69,4 +69,20 @@
             <reference local="database_table_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="database_join">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="alias" type="varchar" size="255" required="false"/>
+        <column name="local_column" type="integer" size="11" required="false"/>
+        <column name="foreign_column" type="integer" size="11" required="false"/>
+        <column name="database_source_id" type="integer" required="true"/>
+
+        <foreign-key foreignTable="database_column">
+            <reference local="local_column" foreign="id"/>
+            <reference local="foreign_column" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="database_source">
+            <reference local="database_source_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>

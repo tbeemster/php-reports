@@ -1,0 +1,73 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Configure{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ base }}/public/css/report_list.css"/>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Configuration</h2>
+            <ol class="nav bs-sidenav">
+                <li>
+                    <a href="configure">Manage Data Sources</a>
+                </li>
+                <li>
+                    <a href="configure/saturn">Data Types</a>
+                </li>
+                <li class="active">
+                    <a href="configure/join_tables">Join Tables</a>
+                </li>
+            </ol>
+        </div>
+
+        <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
+            <h1 class="visible-phone">All Data Sources</h1>
+            <div class="well well-small">
+                <form action="" method="post">
+                    <input type="hidden" name="subject" value="join"/>
+                    <input type="hidden" name="action" value="add"/>
+
+                    <select name="local_table">
+                        {% for table in tables %}
+                            Table!
+                            {% for column in table.databaseColumns %}
+                                <option value="{{ column.id }}">{{ table.name }}.{{ column.name }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <select name="foreign_table">
+                        {% for table in tables %}
+                            Table!
+                            {% for column in table.databaseColumns %}
+                                <option value="{{ column.id }}">{{ table.name }}.{{ column.name }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="alias" placeholder="Alias"/>
+                    <input type="submit" value="Add join"/>
+                </form>
+            </div>
+            <div class="well well-small">
+                <ul>
+                    {% for dbJoin in dbJoins %}
+                        <li>
+                            {% if dbJoin.alias %}
+                                {{ dbJoin.alias }}
+                            {% else %}
+                                {{ dbJoin.localColumn }} to {{ dbJoin.foreignColumn }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

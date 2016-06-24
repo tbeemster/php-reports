@@ -2,44 +2,20 @@
 namespace PhpReports\Controller;
 
 use PhpReports\ManageDatabase;
+use PhpReports\Model\Base\DatabaseJoinQuery;
+use PhpReports\Model\Base\DatabaseTableQuery;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
+use PhpReports\PhpReports;
+use Propel\Runtime\ActiveQuery\Criteria;
 
 class ConfigureController {
 
-	public function dataSource($database = null) {
-		if ($database == null) {
-			$this->newDataSource();
-		}
-		else {
-			$this->manageDataSource($database);
-		}
-	}
-
-	protected function newDataSource() {
-		$request = \Flight::request();
-		$dbms = $request->data['dbms'];
-		$host = $request->data['host'];
-		$databaseName = $request->data['database_name'];
-		$username = $request->data['username'];
-		$password = $request->data['password'];
-
-		$databaseSource = new DatabaseSource();
-		$databaseSource->setDbms($dbms)->setHost($host)->setDatabaseName($databaseName)->setUsername($username)->setPassword($password);
-
-		try {
-			$manageDatabase = new ManageDatabase($databaseSource);
-		}
-		catch (\PDOException $pdoException) {
-			$databaseSource->delete();
-			echo '<h1>Couldn\'t connect to database</h1>';
-			var_dump($pdoException);
-			exit();
-		}
-		$databaseSource->save();
-		echo $manageDatabase->configureTables();
-	}
-
+	/**
+	 * Manage a data source: show tables from the given data source.
+	 * @param string $dataSource
+	 * @throws \Propel\Runtime\Exception\PropelException
+	 */
 	public function manageDataSource($dataSource) {
 		$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
 		if (!$databaseSource instanceof DatabaseSource) {
@@ -56,5 +32,14 @@ class ConfigureController {
 			exit();
 		}
 		echo $manageDatabase->configureTables();
+	}
+
+	public function joinTables($dataSource) {
+		$dataSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
+		$tables = DatabaseTableQuery::create()->filterByDatabaseSource($dataSource)->filterByHidden(false)->orderByName(Criteria::ASC)->find();
+
+		$dbJoins = DatabaseJoinQuery::create()->filterByDatabaseSource($dataSource)->find();
+		$templateVars = array('dbJoins' => $dbJoins, 'tables' => $tables);
+		echo PhpReports::render('configure/join_tables', $templateVars);
 	}
 }
