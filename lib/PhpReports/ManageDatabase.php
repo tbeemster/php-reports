@@ -2,6 +2,7 @@
 namespace PhpReports;
 
 use PhpReports\Model\DatabaseSource;
+use PhpReports\Model\DatabaseTable;
 
 class ManageDatabase {
 

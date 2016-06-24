@@ -9,10 +9,10 @@
 propel:
     paths:
         # The directory where Propel expects to find your `schema.xml` file.
-        schemaDir: model
+        schemaDir: lib/PhpReports
 
         # The directory where Propel should output generated object model classes.
-        phpDir: /var/www/yardinternet/dev.yardinternet.nl/timothe/php-reports/model
+        phpDir: /var/www/yardinternet/dev.yardinternet.nl/timothe/php-reports/lib
 
 #   database:
 #       connections:

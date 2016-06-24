@@ -1,19 +1,29 @@
 <?php
-namespace PhpReports\Controller;
+namespace PhpReports\Action;
 
 use PhpReports\ManageDatabase;
 use PhpReports\Model\DatabaseSource;
-use PhpReports\Model\DatabaseSourceQuery;
 
-class ConfigureController {
+abstract class Action {
 
-	public function dataSource($database = null) {
-		if ($database == null) {
-			$this->newDataSource();
-		}
-		else {
-			$this->manageDataSource($database);
-		}
+	/**
+	 * Collects the input data
+	 * @return void
+	 */
+	public function collect() {
+
+	}
+
+	/**
+	 * Validates the incoming request
+	 * @return boolean
+	 */
+	public function validate() {
+		return true;
+	}
+
+	public function execute() {
+
 	}
 
 	protected function newDataSource() {
@@ -38,24 +48,6 @@ class ConfigureController {
 			exit();
 		}
 		$databaseSource->save();
-		echo $manageDatabase->configureTables();
-	}
-
-	protected function manageDataSource($dataSource) {
-		$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
-		if (!$databaseSource instanceof DatabaseSource) {
-			echo 'Database ' . $dataSource . ' not found!';
-			exit();
-		}
-		try {
-			$manageDatabase = new ManageDatabase($databaseSource);
-		}
-		catch (\PDOException $pdoException) {
-			$databaseSource->delete();
-			echo '<h1>Couldn\'t connect to database</h1>';
-			var_dump($pdoException);
-			exit();
-		}
 		echo $manageDatabase->configureTables();
 	}
 }

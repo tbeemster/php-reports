@@ -1,9 +1,7 @@
 <?php
 // for build-in php server serve the requested resource as-is.
-use PhpReports\ManageDatabase;
-use PhpReports\Model\DatabaseSource;
-use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\PhpReports;
+use Propel\Runtime\Exception\ClassNotFoundException;
 
 if (php_sapi_name() == 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
     return false;
@@ -68,50 +66,6 @@ Flight::route('/configure', function () {
 	PhpReports::configure();
 });
 
-Flight::route('POST /configure/database', function () {
-
-	$request = Flight::request();
-	$dbms = $request->data['dbms'];
-	$host = $request->data['host'];
-	$databaseName = $request->data['database_name'];
-	$username = $request->data['username'];
-	$password = $request->data['password'];
-
-	$databaseSource = new DatabaseSource();
-	$databaseSource->setDbms($dbms)->setHost($host)->setDatabaseName($databaseName)->setUsername($username)->setPassword($password);
-
-	$dsn = $databaseSource->getDsn();;
-	try {
-		$manageDatabase = new ManageDatabase($databaseSource);
-	}
-	catch (PDOException $pdoException) {
-		$databaseSource->delete();
-		echo '<h1>Couldn\'t connect to database</h1>';
-		var_dump($pdoException);
-		exit();
-	}
-	$databaseSource->save();
-	echo $manageDatabase->configureTables();
-});
-
-Flight::route('GET /configure/@database', function ($database) {
-	$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($database);
-	if (!$databaseSource instanceof DatabaseSource) {
-		echo 'Database ' . $database . ' not found!';
-		exit();
-	}
-	try {
-		$manageDatabase = new ManageDatabase($databaseSource);
-	}
-	catch (PDOException $pdoException) {
-		$databaseSource->delete();
-		echo '<h1>Couldn\'t connect to database</h1>';
-		var_dump($pdoException);
-		exit();
-	}
-	echo $manageDatabase->configureTables();
-});
-
 Flight::route('/dashboard/@name',function($name) {
 	PhpReports::displayDashboard($name);
 });
@@ -150,10 +104,48 @@ Flight::route('/email',function() {
 	PhpReports::emailReport();	
 });
 
-Flight::route('/@controller/@action', function ($controller, $action) {
-	$controller = new $controller();
-	echo $controller->$action();
-	PhpReports::listDashboards();
+Flight::route('/action/@subNamespace/@action', function ($subNamespace, $action) {
+	$action = strtolower($action);
+	$action = ucwords($action, "\t\n\r\f\v-_");
+	$action = str_replace('-', '', $action);
+
+	$subNamespace = strtolower($subNamespace);
+	$subNamespace = ucwords($subNamespace, "\t\n\r\f\v-_");
+	$subNamespace = str_replace('-', '', $subNamespace);
+
+	$fullyQualifiedNamespace = '\\PhpReports\\Action\\' . $subNamespace . '\\' . $action . 'Action';
+
+	if (!class_exists($fullyQualifiedNamespace)) {
+		throw new ClassNotFoundException('Class ' . $fullyQualifiedNamespace . ' has not been found');
+	}
+
+	/** @var \PhpReports\Action\Action $action */
+	$action = new $fullyQualifiedNamespace();
+	$action->collect();
+	if ($action->validate()) {
+		$action->execute();
+	}
+	else {
+		die('Not validated');
+	}
+});
+
+Flight::route('/@controller/@action(/@parameter)', function ($controller, $action, $parameter) {
+	$controller = strtolower($controller);
+	$controller = ucwords($controller, "\t\n\r\f\v-_");
+	$controller = str_replace('-', '', $controller);
+
+	$fullyQualifiedNamespace = '\\PhpReports\\Controller\\' . $controller . 'Controller';
+
+	if (!class_exists($fullyQualifiedNamespace)) {
+		throw new ClassNotFoundException('Class ' . $fullyQualifiedNamespace . ' has not been found');
+	}
+	$controller = new $fullyQualifiedNamespace();
+
+	if (!method_exists($controller, $action)) {
+		throw new Exception('Method not found in controller: ' . $fullyQualifiedNamespace . ' for action: ' . $action);
+	}
+	echo $controller->$action($parameter);
 });
 
 Flight::set('flight.handle_errors', false);
