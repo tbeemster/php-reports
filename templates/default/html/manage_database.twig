@@ -29,7 +29,7 @@
 
         <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
             <h1 class="visible-phone">All Reports</h1>
-            <div class="well well-small" style="height: 300px; overflow-y: scroll; padding: 5px;">
+            <div class="well well-small">
                 <table cellpadding="5" cellspacing="2" border="1" rules="all">
                     <thead>
                     <tr>
@@ -40,18 +40,24 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for tab in tables %}
+                    {% for row in tables %}
                         <tr>
-                            <td>{{ tab.Table }}</td>
-                            <td>{{ tab.RowCount }}</td>
-                            <td>{{ tab.ColumnCount }}</td>
+                            <td>{{ row.Table }}</td>
+                            <td>{{ row.RowCount }}</td>
+                            <td>{{ row.ColumnCount }}</td>
                             <td>
-                                {{ tab.Hidden }}
-                                {% if tab.Hidden == true %}
-                                    <a href="show/{{ tab.Table }}"><i class="glyphicon glyphicon-eye-open"></i></a>
-                                {% else %}
-                                    <a href="hide/{{ tab.Table }}"><i class="glyphicon glyphicon-eye-close"></i></a>
-                                {% endif %}
+                                <form action="" method="post">
+                                    <input type="hidden" name="subject" value="database-table"/>
+                                    <input type="hidden" name="database-source" value="{{ dataSource.id }}"/>
+                                    <input type="hidden" name="database-table" value="{{ row.TableId }}"/>
+                                    {% if row.Hidden == true %}
+                                        <input type="hidden" name="action" value="show"/>
+                                        <button><i class="glyphicon glyphicon-eye-open"></i> Unhide</button>
+                                    {% else %}
+                                        <input type="hidden" name="action" value="hide"/>
+                                        <button><i class="glyphicon glyphicon-eye-close"></i> Hide</button>
+                                    {% endif %}
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}

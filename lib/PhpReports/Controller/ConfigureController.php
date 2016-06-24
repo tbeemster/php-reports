@@ -27,7 +27,6 @@ class ConfigureController {
 		$databaseSource = new DatabaseSource();
 		$databaseSource->setDbms($dbms)->setHost($host)->setDatabaseName($databaseName)->setUsername($username)->setPassword($password);
 
-		$dsn = $databaseSource->getDsn();;
 		try {
 			$manageDatabase = new ManageDatabase($databaseSource);
 		}
@@ -41,7 +40,7 @@ class ConfigureController {
 		echo $manageDatabase->configureTables();
 	}
 
-	protected function manageDataSource($dataSource) {
+	public function manageDataSource($dataSource) {
 		$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
 		if (!$databaseSource instanceof DatabaseSource) {
 			echo 'Database ' . $dataSource . ' not found!';

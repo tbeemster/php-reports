@@ -1,5 +1,6 @@
 <?php
 // for build-in php server serve the requested resource as-is.
+use PhpReports\Action\ActionHandler;
 use PhpReports\PhpReports;
 use Propel\Runtime\Exception\ClassNotFoundException;
 
@@ -58,6 +59,15 @@ if(isset(PhpReports::$config['ga_api'])) {
   });
 }
 
+Flight::route('POST /*', function () {
+	$actionHandler = new ActionHandler();
+	$isValid = $actionHandler->isValidAction(Flight::request());
+	if (!$isValid) {
+		return true;
+	}
+	$actionHandler->executeAction();
+});
+
 Flight::route('/',function() {
 	PhpReports::listReports();
 });
@@ -104,7 +114,7 @@ Flight::route('/email',function() {
 	PhpReports::emailReport();	
 });
 
-Flight::route('/action/@subNamespace/@action', function ($subNamespace, $action) {
+Flight::route('/action/@subNamespace/@action/*', function ($subNamespace, $action) {
 	$action = strtolower($action);
 	$action = ucwords($action, "\t\n\r\f\v-_");
 	$action = str_replace('-', '', $action);
@@ -130,10 +140,14 @@ Flight::route('/action/@subNamespace/@action', function ($subNamespace, $action)
 	}
 });
 
-Flight::route('/@controller/@action(/@parameter)', function ($controller, $action, $parameter) {
+Flight::route('/@controller/@action(/@parameter)', function ($controller, $action, $parameter = null) {
 	$controller = strtolower($controller);
 	$controller = ucwords($controller, "\t\n\r\f\v-_");
 	$controller = str_replace('-', '', $controller);
+
+	$action = strtolower($action);
+	$action = ucwords($action, "\t\n\r\f\v-_");
+	$action = str_replace('-', '', $action);
 
 	$fullyQualifiedNamespace = '\\PhpReports\\Controller\\' . $controller . 'Controller';
 
