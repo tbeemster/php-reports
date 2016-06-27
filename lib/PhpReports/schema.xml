@@ -70,19 +70,43 @@
         </foreign-key>
     </table>
 
-    <table name="database_join">
-        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+    <table name="database_join" isCrossRef="true">
+        <column name="local_column" type="integer" size="11" required="true"/>
+        <column name="foreign_column" type="integer" size="11" required="true"/>
         <column name="alias" type="varchar" size="255" required="false"/>
-        <column name="local_column" type="integer" size="11" required="false"/>
-        <column name="foreign_column" type="integer" size="11" required="false"/>
         <column name="database_source_id" type="integer" required="true"/>
 
-        <foreign-key foreignTable="database_column">
-            <reference local="local_column" foreign="id"/>
-            <reference local="foreign_column" foreign="id"/>
-        </foreign-key>
         <foreign-key foreignTable="database_source">
             <reference local="database_source_id" foreign="id"/>
+        </foreign-key>
+
+        <foreign-key foreignTable="database_column" phpName="LocalColumnRelation">
+            <reference local="local_column" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="database_column" phpName="ForeignColumnRelation">
+            <reference local="foreign_column" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="report">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="false"/>
+        <column name="type" type="varchar" size="255" required="true"/>
+        <column name="database_source_id" type="integer" required="true"/>
+        <foreign-key foreignTable="database_source">
+            <reference local="database_source_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="report_column" isCrossRef="true">
+        <column name="report_id" type="integer" primaryKey="true"/>
+        <column name="database_column_id" type="integer" primaryKey="true"/>
+        <column name="type" type="enum" valueSet="measure,dimension,filter" primaryKey="true"/>
+        <foreign-key foreignTable="report">
+            <reference local="report_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="database_column">
+            <reference local="database_column_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
