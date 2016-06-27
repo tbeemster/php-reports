@@ -2,6 +2,7 @@
 // for build-in php server serve the requested resource as-is.
 use PhpReports\Action\ActionHandler;
 use PhpReports\PhpReports;
+use PhpReports\Service\GoogleAnalyticsService;
 use Propel\Runtime\Exception\ClassNotFoundException;
 
 if (php_sapi_name() == 'cli-server' && preg_match('/\.(?:png|jpg|jpeg|gif|css|js)$/', $_SERVER["REQUEST_URI"])) {
@@ -22,41 +23,11 @@ header("Access-Control-Allow-Origin: *");
 
 // Google Analytics API
 if(isset(PhpReports::$config['ga_api'])) {
-  $ga_client = new Google_Client();
-  $ga_client->setApplicationName(PhpReports::$config['ga_api']['applicationName']);
-  $ga_client->setClientId(PhpReports::$config['ga_api']['clientId']);
-  $ga_client->setAccessType('offline');
-  $ga_client->setClientSecret(PhpReports::$config['ga_api']['clientSecret']);
-  $ga_client->setRedirectUri(PhpReports::$config['ga_api']['redirectUri']);
-  $ga_service = new Google_Service_Analytics($ga_client);
-  $ga_client->addScope(Google_Service_Analytics::ANALYTICS);
-  if(isset($_GET['code'])) {
-    $ga_client->authenticate($_GET['code']);
-    $_SESSION['ga_token'] = $ga_client->getAccessToken();
-    
-    if(isset($_SESSION['ga_authenticate_redirect'])) {
-      $url = $_SESSION['ga_authenticate_redirect'];
-      unset($_SESSION['ga_authenticate_redirect']);
-      header("Location: $url");
-      exit;
-    }
-  }
-  if(isset($_SESSION['ga_token'])) {    
-    $ga_client->setAccessToken($_SESSION['ga_token']);
-  }
-  elseif(isset(PhpReports::$config['ga_api']['accessToken'])) {    
-    $ga_client->setAccessToken(PhpReports::$config['ga_api']['accessToken']);
-    $_SESSION['ga_token'] = $ga_client->getAccessToken();
-  }
-  
-  Flight::route('/ga_authenticate',function() use($ga_client) {
-    $authUrl = $ga_client->createAuthUrl();
-    if(isset($_GET['redirect'])) {
-      $_SESSION['ga_authenticate_redirect'] = $_GET['redirect'];
-    }
-    header("Location: $authUrl");
-    exit;
-  });
+    $googleAnalyticsService = new GoogleAnalyticsService();
+
+	Flight::route('/ga_authenticate',function() use($googleAnalyticsService) {
+		$googleAnalyticsService->authorize();
+	});
 }
 
 Flight::route('POST /*', function () {
@@ -111,7 +82,7 @@ Flight::route('/set-environment',function() {
 
 //email report
 Flight::route('/email',function() {
-	PhpReports::emailReport();	
+	PhpReports::emailReport();
 });
 
 Flight::route('/action/@subNamespace/@action/*', function ($subNamespace, $action) {
