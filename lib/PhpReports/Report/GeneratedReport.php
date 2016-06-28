@@ -43,8 +43,41 @@ class GeneratedReport extends Report {
 		}
 
 		$this->options['Environment'] = $environment;
-
+		$this->headers[] = 'Chart';
 		$this->options['Type'] = 'Generated';
+		$this->options['Name'] = $report->getName();
+		$this->options['Filters'] = array();
+		$this->options['Variables'] = array();
+		$this->options['Includes'] = array();
+		$this->options['Name'] = $report->getName();
+		$this->options['Charts'] = array(
+			0 => array(
+				'type' => 'BarChart',
+				'columns' => array(2, 3, 1),
+				'datatypes' => array('string', 'string', 'number'),
+				'dataset' => 0,
+				'title' => "Line Chart chart",
+				'width' => "100%",
+				'height' => "400px",
+				'xhistogram' => false,
+				'buckets' => 0,
+				'omit-totals' => false,
+				'rotate-x-labels' => false,
+				'grid' => false,
+				'timefmt' => "",
+				'xformat' => "",
+				'yrange' => "",
+				'all' => false,
+				'colors' => array(),
+				'roles' => array(),
+				'markers' => false,
+				'omit-columns' => array(),
+				'options' => array(),
+				'num' => 1,
+				'Rows' => array(),
+			)
+		);
+		$this->options['has_charts'] = true;
 
 		$this->is_ready = true;
 	}

@@ -2,6 +2,11 @@
 use PhpReports\ReportFormatBase;
 
 class ChartReportFormat extends ReportFormatBase {
+
+	/**
+	 * @param PhpReports\Report $report
+	 * @param $request
+	 */
 	public static function display(&$report, &$request) {
 		if(!$report->options['has_charts']) return;
 		
