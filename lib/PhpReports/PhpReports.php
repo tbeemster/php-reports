@@ -2,6 +2,7 @@
 namespace PhpReports;
 
 use PhpReports\Model\DatabaseSourceQuery;
+use PhpReports\Service\ReportService;
 
 class PhpReports {
 	public static $config;
@@ -253,7 +254,8 @@ class PhpReports {
 		$errors = array();
 
 		$reports = self::getReports(self::$config['reportDir'].'/',$errors);
-
+		$reportService = new ReportService();
+		$reports[] = $reportService->getReports();
 		$template_vars['reports'] = $reports;
 		$template_vars['report_errors'] = $errors;
 

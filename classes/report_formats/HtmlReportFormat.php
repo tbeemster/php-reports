@@ -1,4 +1,5 @@
 <?php
+use PhpReports\PhpReports;
 use PhpReports\ReportFormatBase;
 
 class HtmlReportFormat extends ReportFormatBase {

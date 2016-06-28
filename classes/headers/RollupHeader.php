@@ -1,6 +1,8 @@
 <?php
 
 use PhpReports\HeaderBase;
+use PhpReports\PhpReports;
+use PhpReports\ReportValue;
 
 class RollupHeader extends HeaderBase {
 	static $validation = array(
