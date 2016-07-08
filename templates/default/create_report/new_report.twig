@@ -1,0 +1,53 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Create report{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ base }}/public/css/report_list.css"/>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="report_list" class="col-lg-4 col-md-4 col-xs-12 col-lg-offset-2 col-md-offset-3">
+            <form method="post">
+                <input type="hidden" name="subject" value="report"/>
+                <input type="hidden" name="action" value="add"/>
+                <input type="hidden" name="dataSource" value="{{ dataSource.id }}"/>
+
+                <h1 class="visible-phone">Create a report</h1>
+
+                <label for="name">Report name:</label>
+                <input type="text" size="30" name="name" id="name" placeholder="Report name" value="{{ report.name }}"
+                       class="form-control"/>
+
+                <label for="report_type">Rapport type</label>
+                <select name="report_type" id="report_type" class="form-control">
+                    <option value="LineChart">LineChart</option>
+                    <option value="GeoChart">GeoChart</option>
+                    <option value="AnnotatedTimeLine">AnnotatedTimeLine</option>
+                    <option value="BarChart">BarChart</option>
+                    <option value="ColumnChart">ColumnChart</option>
+                    <option value="Timeline">Timeline</option>
+                    <option value="AreaChart">AreaChart</option>
+                    <option value="Histogram">Histogram</option>
+                    <option value="ComboChart">ComboChart</option>
+                    <option value="BubbleChart">BubbleChart</option>
+                    <option value="CandlestickChart">CandlestickChart</option>
+                    <option value="Gauge">Gauge</option>
+                    <option value="Map">Map</option>
+                    <option value="PieChart">PieChart</option>
+                    <option value="Sankey">Sankey</option>
+                    <option value="ScatterChart">ScatterChart</option>
+                    <option value="SteppedAreaChart">SteppedAreaChart</option>
+                    <option value="WordTree">WordTree</option>
+                </select>
+
+                <input type="submit" value="Next" class="btn btn-primary"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}

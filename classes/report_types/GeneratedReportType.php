@@ -1,4 +1,7 @@
 <?php
+use PhpReports\Model\Base\DatabaseColumnQuery;
+use PhpReports\Model\DatabaseJoin;
+use PhpReports\Model\DatabaseTable;
 use PhpReports\Model\Report as ReportModel;
 use PhpReports\Report;
 use PhpReports\ReportTypeBase;
@@ -45,11 +48,71 @@ class GeneratedReportType extends ReportTypeBase {
 		/** @var ReportModel $reportModel */
 		$reportModel = $report->report;
 
-		$sql = 'SHOW TABLES;';
+		if ($reportModel->getSqlMode() == 1) {
+			$sql = $reportModel->getSqlCode();
+		}
+		else {
+			$sql = self::generateSql($reportModel);
+		}
+
 
 		$result = $report->conn->query($sql);
 		$rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
 		return $rows;
+	}
+
+	/**
+	 * Generates SQL code based on the given report
+	 * @param ReportModel $report
+	 */
+	protected static function generateSql(ReportModel $reportModel) {
+		$tables = array();
+		$joins = array();
+
+		$sql = 'SELECT ';
+
+		$i = 0;
+		foreach ($reportModel->getDatabaseColumns() as $column) {
+			if ($i > 0) {
+				$sql .= ', ';
+			}
+			foreach ($column->getDatabaseJoinsRelatedByForeignColumn() as $join) {
+				$joins[] = $join;
+			}
+			$sql .= $column->getDatabaseTable()->getName() . '.' . $column->getName();
+
+			$i++;
+			$tables[$column->getDatabaseTable()->getId()] = $column->getDatabaseTable();
+		}
+
+		$sql .= ' FROM ';
+
+		$i = 0;
+
+		/** @var DatabaseTable $table */
+		foreach ($tables as $table) {
+			if ($i > 0) {
+				$sql .= ', ';
+			}
+			$sql .= $table->getName();
+
+			$i++;
+		}
+
+		$i = 0;
+		/** @var DatabaseJoin $join */
+		foreach ($joins as $join) {
+			if ($i == 0) {
+				$sql .= ' WHERE ';
+			}
+			else {
+				$sql .= ' AND ';
+			}
+			$localColumn = DatabaseColumnQuery::create()->findOneById($join->getLocalColumn());
+			$foreignColumn = DatabaseColumnQuery::create()->findOneById($join->getForeignColumn());
+			$sql .= $localColumn->getDatabaseTable()->getName() . '.' . $localColumn->getName() . ' = ' . $foreignColumn->getDatabaseTable()->getName() . '.' . $foreignColumn->getName();
+		}
+		return $sql . ' LIMIT 100';
 	}
 }

@@ -17,4 +17,21 @@ use PhpReports\Model\Base\DatabaseColumn as BaseDatabaseColumn;
 class DatabaseColumn extends BaseDatabaseColumn
 {
 
+	public function getChartDataType() {
+		$dataType = 'string';
+
+		if (strpos($this->getDataType(), 'tinyint') !== false) {
+			$dataType = 'boolean';
+		}
+		elseif (strpos($this->getDataType(), 'int') !== false || strpos($this->getDataType(), 'double') !== false) {
+			$dataType = 'number';
+		}
+		elseif (strpos($this->getDataType(), 'char') !== false || strpos($this->getDataType(), 'text') !== false) {
+			$dataType = 'string';
+		}
+		elseif (strpos($this->getDataType(), 'date') !== false) {
+			$dataType = 'date';
+		}
+		return $dataType;
+	}
 }

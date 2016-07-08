@@ -2,32 +2,71 @@
 namespace PhpReports\Controller;
 
 use PhpReports\Model\Base\DatabaseJoinQuery;
-use PhpReports\Model\Base\DatabaseTableQuery;
 use PhpReports\Model\DatabaseSourceQuery;
+use PhpReports\Model\Report;
+use PhpReports\Model\ReportQuery;
 use PhpReports\PhpReports;
-use Propel\Runtime\ActiveQuery\Criteria;
 
 class CreateReportController {
 
 	public function chooseTables($dataSource) {
+		$dataSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
+
+		$templateVars = array(
+			'dataSource' => $dataSource
+		);
+		echo PhpReports::render('create_report/new_report', $templateVars);
+	}
+
+
+	public function edit() {
 		$request = \Flight::request();
-		$reportId = time();
+
 		if (count($request->query->getData()) > 0) {
 			$reportId = $request->query['report'];
-
-			$column = $request->query->getData();
-			$_SESSION['report_' . $reportId][$column['type']][] = $column['column'];
+			$report = ReportQuery::create()->findOneById($reportId);
+			if (!$report instanceof Report) {
+				throw new \Exception('Report not found! ' . $reportId);
+			}
 		}
-		$dataSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
-		$tables = DatabaseTableQuery::create()->filterByDatabaseSource($dataSource)->filterByHidden(false)->orderByName(Criteria::ASC)->find();
+		else {
+			throw new \Exception('No report given! ');
+		}
+		$columns = $report->getDatabaseColumns();
+		$tables = array();
+		foreach ($columns as $column) {
+			$table = $column->getDatabaseTable();
+			$tables[$table->getId()] = $table;
+		}
+		$dbJoins = DatabaseJoinQuery::create()->filterByDatabaseSource($report->getDatabaseSource())->find();
 
-		$dbJoins = DatabaseJoinQuery::create()->filterByDatabaseSource($dataSource)->find();
+		$chartTypes = array(
+			'LineChart',
+			'GeoChart',
+			'AnnotatedTimeLine',
+			'BarChart',
+			'ColumnChart',
+			'Timeline',
+			'AreaChart',
+			'Histogram',
+			'ComboChart',
+			'BubbleChart',
+			'CandlestickChart',
+			'Gauge',
+			'Map',
+			'PieChart',
+			'Sankey',
+			'ScatterChart',
+			'SteppedAreaChart',
+			'WordTree'
+		);
+
 		$templateVars = array(
 			'dbJoins' => $dbJoins,
 			'tables' => $tables,
-			'reportStorage' => $_SESSION['report_' . $reportId],
-			'reportId' => $reportId,
-			'dataSource' => $dataSource
+			'report' => $report,
+			'dataSource' => $report->getDatabaseSource(),
+			'chartTypes' => $chartTypes
 		);
 		echo PhpReports::render('create_report/choose_tables', $templateVars);
 	}

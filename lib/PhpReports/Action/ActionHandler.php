@@ -45,6 +45,7 @@ class ActionHandler {
 			\Flight::redirect($this->action->getRedirectUrl());
 		}
 		else {
+			var_dump(\Flight::request());
 			throw new ValidatorException('The action: ' . get_class($this->action) . ' could not be validated');
 		}
 	}

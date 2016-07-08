@@ -45,24 +45,23 @@ class GeneratedReport extends Report {
 		$this->options['Environment'] = $environment;
 		$this->headers[] = 'Chart';
 		$this->options['Type'] = 'Generated';
-		$this->options['Name'] = $report->getName();
 		$this->options['Filters'] = array();
 		$this->options['Variables'] = array();
 		$this->options['Includes'] = array();
 		$this->options['Name'] = $report->getName();
 		$this->options['Charts'] = array(
 			0 => array(
-				'type' => 'BarChart',
-				'columns' => array(2, 3, 1),
-				'datatypes' => array('string', 'string', 'number'),
+				'type' => $report->getType(),
 				'dataset' => 0,
-				'title' => "Line Chart chart",
+				'title' => $report->getName(),
+				'h-axis-title' => $report->getHAxisTitle(),
+				'v-axis-title' => $report->getVAxisTitle(),
 				'width' => "100%",
 				'height' => "400px",
 				'xhistogram' => false,
 				'buckets' => 0,
 				'omit-totals' => false,
-				'rotate-x-labels' => false,
+				'rotate-x-labels' => true,
 				'grid' => false,
 				'timefmt' => "",
 				'xformat' => "",
@@ -77,6 +76,12 @@ class GeneratedReport extends Report {
 				'Rows' => array(),
 			)
 		);
+		$i = 0;
+		foreach ($report->getDatabaseColumnDataTypes() as $column) {
+			$this->options['Charts'][0]['columns'][] = $i;
+			$this->options['Charts'][0]['datatypes'][] = $column[1];
+			$i++;
+		}
 		$this->options['has_charts'] = true;
 
 		$this->is_ready = true;

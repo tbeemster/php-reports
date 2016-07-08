@@ -92,6 +92,10 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="varchar" size="255" required="false"/>
         <column name="type" type="varchar" size="255" required="true"/>
+        <column name="h_axis_title" type="varchar" size="255" required="false"/>
+        <column name="v_axis_title" type="varchar" size="255" required="false"/>
+        <column name="sql_mode" type="boolean" required="false"/>
+        <column name="sql_code" type="longvarchar" required="false"/>
         <column name="database_source_id" type="integer" required="true"/>
         <foreign-key foreignTable="database_source">
             <reference local="database_source_id" foreign="id"/>
@@ -101,7 +105,8 @@
     <table name="report_column" isCrossRef="true">
         <column name="report_id" type="integer" primaryKey="true"/>
         <column name="database_column_id" type="integer" primaryKey="true"/>
-        <column name="type" type="enum" valueSet="measure,dimension,filter" primaryKey="true"/>
+        <column name="data_type" type="enum" valueSet="boolean,number,string,date,datetime,timeofday"
+                primaryKey="true"/>
         <foreign-key foreignTable="report">
             <reference local="report_id" foreign="id"/>
         </foreign-key>
@@ -109,4 +114,5 @@
             <reference local="database_column_id" foreign="id"/>
         </foreign-key>
     </table>
+
 </database>

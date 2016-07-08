@@ -16,81 +16,107 @@
             <h2>Tables</h2>
             <ol class="nav bs-sidenav">
                 <li>
-                    <form method="get">
-                        <input type="hidden" name="report" value="{{ reportId }}"/>
+                    <form method="post">
+                        <input type="hidden" name="report" value="{{ report.id }}"/>
+                        <input type="hidden" name="subject" value="report"/>
+                        <input type="hidden" name="action" value="add-column"/>
 
                         <label for="column">Column</label>
-                        <select name="column" id="column" class="form-control">
-                            {% for table in tables %}
-                                {{ table.name }}
+                        {% for table in dataSource.databaseTables %}
+                            <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#dataTable{{ table.id }}">{{ table.name }}
+                            </button>
+                            <div class="collapse" id="dataTable{{ table.id }}">
                                 {% for column in table.databaseColumns %}
-                                    <option value="{{ column.id }}">{{ table.name }}.{{ column.name }}</option>
+                                    <label><input type="radio" name="column" value="{{ column.id }}">{{ column.name }}
+                                    </label><br/>
                                 {% endfor %}
+                            </div>
                             {% endfor %}
-                        </select>
 
-                        <label for="type">Type</label>
-                        <select name="type" id="type" class="form-control">
-                            <option value="measure">Measure</option>
-                            <option value="dimension">Dimension</option>
-                            <option value="filter">Filter</option>
-                        </select>
                         <input type="submit" value="Add" class="btn btn-default"/>
                     </form>
                 </li>
             </ol>
         </div>
 
-        <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
+        <div id="report_list" class="col-lg-4 col-md-4 col-xs-12 col-lg-offset-2 col-md-offset-3">
             <form method="post">
                 <input type="hidden" name="subject" value="report"/>
-                <input type="hidden" name="action" value="add"/>
-                <input type="hidden" name="dataSource" value="{{ dataSource.id }}"/>
+                <input type="hidden" name="action" value="update"/>
+                <input type="hidden" name="report" value="{{ report.id }}"/>
 
                 <h1 class="visible-phone">Create a report</h1>
 
-                <label for="name">Report name:</label>
-                <input type="text" size="30" name="name" id="name" placeholder="Report name" class="form-control"/>
-
                 <label for="report_type">Rapport type</label>
                 <select name="report_type" id="report_type" class="form-control">
-                    <option value="LineChart">LineChart</option>
-                    <option value="GeoChart">GeoChart</option>
-                    <option value="AnnotatedTimeLine">AnnotatedTimeLine</option>
-                    <option value="BarChart">BarChart</option>
-                    <option value="ColumnChart">ColumnChart</option>
-                    <option value="Timeline">Timeline</option>
-                    <option value="AreaChart">AreaChart</option>
-                    <option value="Histogram">Histogram</option>
-                    <option value="ComboChart">ComboChart</option>
-                    <option value="BubbleChart">BubbleChart</option>
-                    <option value="CandlestickChart">CandlestickChart</option>
-                    <option value="Gauge">Gauge</option>
-                    <option value="Map">Map</option>
-                    <option value="PieChart">PieChart</option>
-                    <option value="Sankey">Sankey</option>
-                    <option value="ScatterChart">ScatterChart</option>
-                    <option value="SteppedAreaChart">SteppedAreaChart</option>
-                    <option value="WordTree">WordTree</option>
+                    {% for chartType in chartTypes %}
+                        <option name="{{ chartType }}"
+                                {% if report.type == chartType %}
+                                    selected="selected"
+                                {% endif %}
+                        >
+                            {{ chartType }}
+                        </option>
+                    {% endfor %}
                 </select>
+                <label for="report_type">Rapport type</label>
+                <select name="report_type" id="report_type" class="form-control">
+                    {% for chartType in chartTypes %}
+                        <option name="{{ chartType }}"
+                                {% if report.type == chartType %}
+                                    selected="selected"
+                                {% endif %}
+                        >
+                            {{ chartType }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <label for="name">Report name:</label>
+                <input type="text" size="30" name="name" id="name" placeholder="Report name" value="{{ report.name }}"
+                       class="form-control"/>
 
-                <h2>Measures</h2>
-                {% for measure in reportStorage.measure %}
-                    <input type="hidden" name="measures[]" value="{{ measure }}"/>{{ measure }}
-                    {{ measure }}
-                {% endfor %}
-                <h2>Dimensions</h2>
-                {% for dimension in reportStorage.dimension %}
-                    <input type="hidden" name="dimensions[]" value="{{ dimension }}"/>{{ dimension }}
-                {% endfor %}
+                <label for="h_axis_title">Horizontal Axis Title:</label>
+                <input type="text" size="30" name="h_axis_title" id="h_axis_title" placeholder="Horizontal Axis Title"
+                       value="{{ report.hAxisTitle }}"
+                       class="form-control"/>
 
-                <h2>Filters</h2>
-                {% for filter in reportStorage.filter %}
-                    <input type="hidden" name="filters[]" value="{{ filter }}"/>{{ filter }}
-                {% endfor %}
+                <label for="v_axis_title">Vertical Axis Title:</label>
+                <input type="text" size="30" name="v_axis_title" id="v_axis_title" placeholder="Vertical Axis Title"
+                       value="{{ report.vAxisTitle }}"
+                       class="form-control"/>
 
-                <input type="submit" value="Add report" class="btn btn-primary"/>
+                <label for="sql_mode">SQL Mode:</label>
+                <div class="radio">
+                    <label><input type="radio" name="sql_mode" id="sql_mode" value="0"
+                                  {% if not report.sqlMode %}checked="checked"{% endif %}/> Generated</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="sql_mode" value="1"
+                                  {% if report.sqlMode %}checked="checked"{% endif %}/> Manual</label>
+                </div>
+
+                <label for="sql">SQL Code:</label>
+                <textarea name="sql_code" id="sql" class="form-control"
+                          style="height: 200px;">{{ report.sqlCode }}</textarea>
+
+                <ul>
+                    <li>Columns
+                        <ul>
+                            {% for column in report.getDatabaseColumnDataTypes %}
+                                <input type="hidden" name="columns[]" value="{{ column.0.id }}"/>
+                                <li>{{ column.0.databaseTable.name }}.{{ column.0.name }} ( {{ column.1 }} )</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </ul>
+                <input type="submit" value="Update" class="btn btn-primary"/>
             </form>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <iframe src="http://dev.yardinternet.nl/timothe/php-reports/report/chart/?report={{ report.id }}/&amp;content_only=true"
+                    id="chart_container" class="auto-height" scrolling="no" style="width: 100%; height: 403px;"
+                    frameborder="0"></iframe>
         </div>
     </div>
 {% endblock %}

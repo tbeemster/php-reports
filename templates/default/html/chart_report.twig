@@ -62,7 +62,17 @@
 				displayAnnotations: true,
                 series: series_{{chart.num}},
 				colors: [],
-				wmode: 'transparent'
+                {% if report.hAxisTitle %}
+                    hAxis: {title: '{{ report.hAxisTitle }}'},
+                {% endif %}
+                {% if report.hAxisTitle %}
+                    vAxis: {
+                        title: '{{ report.vAxisTitle }}',
+                        minValue: 0,
+                        maxValue: 100
+                    },
+                {% endif %}
+                wmode: 'transparent'
 			};
 
         {% if chart.options %}
