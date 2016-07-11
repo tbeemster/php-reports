@@ -2,10 +2,10 @@
 
 namespace PhpReports\Model;
 
-use PhpReports\Model\Base\Report as BaseReport;
+use PhpReports\Model\Base\Variable as BaseVariable;
 
 /**
- * Skeleton subclass for representing a row from the 'report' table.
+ * Skeleton subclass for representing a row from the 'variable' table.
  *
  *
  *
@@ -14,11 +14,7 @@ use PhpReports\Model\Base\Report as BaseReport;
  * long as it does not already exist in the output directory.
  *
  */
-class Report extends BaseReport
+class Variable extends BaseVariable
 {
-
-	public function __toString() {
-		return $this->getId() . '';
-	}
 
 }

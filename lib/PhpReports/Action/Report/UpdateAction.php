@@ -6,6 +6,7 @@ use PhpReports\Action\Action;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
+use PhpReports\Model\Variable;
 
 class UpdateAction extends Action {
 
@@ -36,6 +37,24 @@ class UpdateAction extends Action {
 	/** @var DatabaseSource */
 	protected $dataSource;
 
+	/** @string */
+	protected $variableName;
+
+	/** @string */
+	protected $displayName;
+
+	/** @string */
+	protected $variableType;
+
+	/** @string */
+	protected $variableDefault;
+
+	/** @string */
+	protected $variableEmpty;
+
+	/** @string */
+	protected $variableMultiple;
+
 	public function collect() {
 		$this->request = \Flight::request();
 		$this->report = ReportQuery::create()->findOneById($this->request->data['report']);
@@ -45,6 +64,13 @@ class UpdateAction extends Action {
 		$this->vAxisTitle = $this->request->data['v_axis_title'];
 		$this->sqlMode = $this->request->data['sql_mode'];
 		$this->sqlCode = $this->request->data['sql_code'];
+
+		$this->variableName = $this->request->data['variable_name'];
+		$this->displayName = $this->request->data['display_name'];
+		$this->variableType = $this->request->data['variable_type'];
+		$this->variableDefault = $this->request->data['variable_default'];
+		$this->variableEmpty = $this->request->data['variable_empty'];
+		$this->variableMultiple = $this->request->data['variable_multiple'];
 	}
 
 	public function validate() {
@@ -58,6 +84,20 @@ class UpdateAction extends Action {
 			->setVAxisTitle($this->vAxisTitle)
 			->setSqlMode($this->sqlMode)
 			->setSqlCode($this->sqlCode);
+
+		$variable = $this->report->getVariables()->getFirst();
+		if (!$variable instanceof Variable) {
+			$variable = new Variable();
+		}
+		$variable->setName($this->variableName)
+			->setDisplayName($this->displayName)
+			->setType($this->variableType)
+			->setDefaultValue($this->variableDefault)
+			->setEmpty($this->variableEmpty)
+			->setMultiple($this->variableMultiple)
+			->save();
+
+		$this->report->addVariable($variable);
 
 		$this->report->save();
 	}

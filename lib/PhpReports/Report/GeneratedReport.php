@@ -2,7 +2,9 @@
 namespace PhpReports\Report;
 
 use PhpReports\Model\Base\ReportQuery;
+use PhpReports\Model\Map\VariableTableMap;
 use PhpReports\Model\Report as ReportModel;
+use PhpReports\Model\Variable;
 use PhpReports\PhpReports;
 use PhpReports\Report;
 
@@ -44,12 +46,93 @@ class GeneratedReport extends Report {
 
 		$this->options['Environment'] = $environment;
 		$this->headers[] = 'Chart';
+		$this->headers[] = 'Variable';
+		$this->headers[] = 'Rollup';
 		$this->options['Type'] = 'Generated';
 		$this->options['Filters'] = array();
-		$this->options['Variables'] = array();
+		$this->options['Variables'] = self::extractVariables($report);
 		$this->options['Includes'] = array();
 		$this->options['Name'] = $report->getName();
-		$this->options['Charts'] = array(
+		$this->options['Charts'] = self::extractCharts($report);
+		$this->options['has_charts'] = (count($this->options['Charts']) > 0 ? true : false);
+		$this->is_ready = true;
+	}
+
+	public function renderReportPage($template = 'html/report', $additional_vars = array()) {
+		$this->run();
+
+		$template_vars = array(
+			'is_ready' => $this->is_ready,
+			'async' => $this->async,
+			'report_url' => PhpReports::$request->base . '/report/generated/?' . $_SERVER['QUERY_STRING'],
+			'report_querystring' => $_SERVER['QUERY_STRING'],
+			'base' => PhpReports::$request->base,
+			'report' => $this->report,
+			'vars' => $this->prepareVariableForm(),
+			'macros' => $this->macros,
+		);
+
+		$template_vars = array_merge($template_vars, $additional_vars);
+
+		$template_vars = array_merge($template_vars, $this->options);
+
+		return PhpReports::render($template, $template_vars);
+	}
+
+	/**
+	 * Extracts the variable(s) from the Report Model and returns them as an array
+	 * @param ReportModel $report
+	 * @return array
+	 * @throws \Propel\Runtime\Exception\PropelException
+	 */
+	public static function extractVariables(ReportModel $report) {
+		if ($report->countVariables() == 0) {
+			return array();
+		}
+
+		$variables = array();
+
+		/** @var Variable $variable */
+		foreach ($report->getVariables() as $variable) {
+			$variables[$variable->getName()] = array(
+				'name' => $variable->getName(),
+				'display' => $variable->getDisplayName(),
+				'type' => $variable->getType(),
+				'default' => $variable->getDefaultValue(),
+				'empty' => $variable->getEmpty(),
+				'multiple' => $variable->getMultiple(),
+			);
+
+			if ($variable->getType() == VariableTableMap::COL_TYPE_DATERANGE) {
+				$variables[$variable->getName()]['default'] = array(
+					'start' => date('Y-m-d', strtotime('last month')),
+					'end' => date('Y-m-d', strtotime('today'))
+				);
+			}
+			elseif ($variable->getType() == VariableTableMap::COL_TYPE_SELECT) {
+				$variables[$variable->getName()]['database_options'] = array(
+					'table' => $variable->getDatabaseTable(),
+					'column' => $variable->getDatabaseColumn(),
+					'display' => $variable->getDatabaseDisplay(),
+					'all' => $variable->getDatabaseAll(),
+				);
+			}
+		}
+		return $variables;
+	}
+
+	/**
+	 * Extracts the chart(s) from the Report Model and returns them as an array
+	 * @param ReportModel $report
+	 * @return array
+	 */
+	public static function extractCharts(ReportModel $report) {
+		/** @todo separate chart as its own entity, so countables are possible */
+		if (false) {
+			return array();
+		}
+
+		$charts = array(
 			0 => array(
 				'type' => $report->getType(),
 				'dataset' => 0,
@@ -78,35 +161,10 @@ class GeneratedReport extends Report {
 		);
 		$i = 0;
 		foreach ($report->getDatabaseColumnDataTypes() as $column) {
-			$this->options['Charts'][0]['columns'][] = $i;
-			$this->options['Charts'][0]['datatypes'][] = $column[1];
+			$charts[0]['columns'][] = $i;
+			$charts[0]['datatypes'][] = $column[1];
 			$i++;
 		}
-		$this->options['has_charts'] = true;
-
-		$this->is_ready = true;
-	}
-
-	public function renderReportPage($template = 'html/report', $additional_vars = array()) {
-		$this->run();
-
-		$template_vars = array(
-			'is_ready' => $this->is_ready,
-			'async' => $this->async,
-			'report_url' => PhpReports::$request->base . '/report/generated/?' . $_SERVER['QUERY_STRING'],
-			'report_querystring' => $_SERVER['QUERY_STRING'],
-			'base' => PhpReports::$request->base,
-			'report' => $this->report,
-			'vars' => $this->prepareVariableForm(),
-			'macros' => $this->macros,
-		);
-
-		$template_vars = array_merge($template_vars, $additional_vars);
-
-		$template_vars = array_merge($template_vars, $this->options);
-
-		return PhpReports::render($template, $template_vars);
 	}
 }
-
 ?>

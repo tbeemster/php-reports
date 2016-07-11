@@ -115,4 +115,31 @@
         </foreign-key>
     </table>
 
+
+    <table name="variable">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="true"/>
+        <column name="display_name" type="varchar" size="255" required="false"/>
+        <column name="type" type="enum" valueSet="text,select,textarea,date,daterange" required="true"/>
+        <column name="default_value" type="varchar" size="255" required="false"/>
+        <column name="empty" type="boolean" required="false"/>
+        <column name="multiple" type="boolean" required="false"/>
+        <column name="database_table" type="varchar" size="255" required="false"/>
+        <column name="database_column" type="varchar" size="255" required="false"/>
+        <column name="database_display" type="varchar" size="255" required="false"/>
+        <column name="database_where" type="longvarchar" required="false"/>
+        <column name="database_all" type="boolean" required="false"/>
+    </table>
+
+    <table name="report_variable" isCrossRef="true">
+        <column name="report_id" type="integer" primaryKey="true"/>
+        <column name="variable_id" type="integer" primaryKey="true"/>
+        <foreign-key foreignTable="report">
+            <reference local="report_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="variable">
+            <reference local="variable_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
 </database>

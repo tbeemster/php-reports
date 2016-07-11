@@ -48,44 +48,6 @@
 
                 <h1 class="visible-phone">Create a report</h1>
 
-                <label for="report_type">Rapport type</label>
-                <select name="report_type" id="report_type" class="form-control">
-                    {% for chartType in chartTypes %}
-                        <option name="{{ chartType }}"
-                                {% if report.type == chartType %}
-                                    selected="selected"
-                                {% endif %}
-                        >
-                            {{ chartType }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <label for="report_type">Rapport type</label>
-                <select name="report_type" id="report_type" class="form-control">
-                    {% for chartType in chartTypes %}
-                        <option name="{{ chartType }}"
-                                {% if report.type == chartType %}
-                                    selected="selected"
-                                {% endif %}
-                        >
-                            {{ chartType }}
-                        </option>
-                    {% endfor %}
-                </select>
-                <label for="name">Report name:</label>
-                <input type="text" size="30" name="name" id="name" placeholder="Report name" value="{{ report.name }}"
-                       class="form-control"/>
-
-                <label for="h_axis_title">Horizontal Axis Title:</label>
-                <input type="text" size="30" name="h_axis_title" id="h_axis_title" placeholder="Horizontal Axis Title"
-                       value="{{ report.hAxisTitle }}"
-                       class="form-control"/>
-
-                <label for="v_axis_title">Vertical Axis Title:</label>
-                <input type="text" size="30" name="v_axis_title" id="v_axis_title" placeholder="Vertical Axis Title"
-                       value="{{ report.vAxisTitle }}"
-                       class="form-control"/>
-
                 <label for="sql_mode">SQL Mode:</label>
                 <div class="radio">
                     <label><input type="radio" name="sql_mode" id="sql_mode" value="0"
@@ -96,8 +58,8 @@
                                   {% if report.sqlMode %}checked="checked"{% endif %}/> Manual</label>
                 </div>
 
-                <label for="sql">SQL Code:</label>
-                <textarea name="sql_code" id="sql" class="form-control"
+                <label for="sql_code">SQL Code:</label>
+                <textarea name="sql_code" id="sql_code" class="form-control"
                           style="height: 200px;">{{ report.sqlCode }}</textarea>
 
                 <ul>
@@ -110,6 +72,104 @@
                         </ul>
                     </li>
                 </ul>
+
+                <div class="col-lg-12">
+                    <button type="button" class="btn btn-default collapsed" data-toggle="collapse"
+                            data-target="#chartOptions">Chart options
+                    </button>
+                </div>
+                <div class="collapse" id="chartOptions">
+
+                    <label for="report_type">Chart type</label>
+                    <select name="report_type" id="report_type" class="form-control">
+                        {% for chartType in chartTypes %}
+                            <option name="{{ chartType }}"
+                                    {% if report.type == chartType %}
+                                        selected="selected"
+                                    {% endif %}
+                            >
+                                {{ chartType }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <label for="name">Report name:</label>
+                    <input type="text" size="30" name="name" id="name" placeholder="Report name"
+                           value="{{ report.name }}"
+                           class="form-control"/>
+
+                    <label for="h_axis_title">Horizontal Axis Title:</label>
+                    <input type="text" size="30" name="h_axis_title" id="h_axis_title"
+                           placeholder="Horizontal Axis Title"
+                           value="{{ report.hAxisTitle }}"
+                           class="form-control"/>
+
+                    <label for="v_axis_title">Vertical Axis Title:</label>
+                    <input type="text" size="30" name="v_axis_title" id="v_axis_title" placeholder="Vertical Axis Title"
+                           value="{{ report.vAxisTitle }}"
+                           class="form-control"/>
+                </div>
+
+                <div class="col-lg-12">
+                    <button type="button" class="btn btn-default collapsed" data-toggle="collapse"
+                            data-target="#reportVariables">Variables
+                    </button>
+                </div>
+                <div class="collapse" id="reportVariables">
+                    <label for="variable_name">Variable name (used in SQL statement)</label>
+                    <input name="variable_name" value="{{ report.variables.first.name }}" id="variable_name" type="text"
+                           class="form-control"/>
+
+                    <label for="display_name">Display name:</label>
+                    <input type="text" size="30" name="display_name" id="display_name" placeholder="Report name"
+                           value="{{ report.variables.first.displayName }}"
+                           class="form-control"/>
+
+                    <label for="variable_type">Type:</label>
+                    <select name="variable_type" id="variable_type"
+                            class="form-control">
+                        <option value="text"
+                                {% if report.variables.first.type == 'text' %}selected="selected"{% endif %}>
+                            Text
+                        </option>
+                        <option value="select"
+                                {% if report.variables.first.type == 'select' %}selected="selected"{% endif %}>
+                            Select
+                        </option>
+                        <option value="textarea"
+                                {% if report.variables.first.type == 'textarea' %}selected="selected"{% endif %}>
+                            Textarea
+                        </option>
+                        <option value="date"
+                                {% if report.variables.first.type == 'date' %}selected="selected"{% endif %}>
+                            Date
+                        </option>
+                        <option value="daterange"
+                                {% if report.variables.first.type == 'daterange' %}selected="selected"{% endif %}>
+                            Date
+                            range
+                        </option>
+                    </select>
+
+                    <label for="variable_default">Default value:</label>
+                    <input type="text" size="30" name="variable_default" id="variable_default"
+                           placeholder="Default value"
+                           value=""
+                           class="form-control"/>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="variable_empty" value="1"
+                                      {% if report.variables.first.empty != 0 %}checked="checked"{% endif %}/> Value may
+                            be
+                            empty</label>
+                    </div>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="variable_multiple" value="1"
+                                      {% if report.variables.first.multiple == 1 %}checked="checked"{% endif %}/>
+                            Multiple values are allowed</label>
+                    </div>
+                </div>
+
                 <input type="submit" value="Update" class="btn btn-primary"/>
             </form>
         </div>

@@ -39,6 +39,40 @@ class GeneratedReportType extends ReportTypeBase {
 		unset($report->conn);
 	}
 
+	public static function getVariableOptions($params, &$report) {
+		$displayColumn = $params['column'];
+		if (isset($params['display'])) {
+			$displayColumn = $params['display'];
+		}
+
+		$query = 'SELECT DISTINCT `' . $params['column'] . '` as val, `' . $displayColumn . '` as disp FROM ' . $params['table'];
+
+		if (isset($params['where'])) {
+			$query .= ' WHERE ' . $params['where'];
+		}
+
+		if (isset($params['order']) && in_array($params['order'], array('ASC', 'DESC'))) {
+			$query .= ' ORDER BY ' . $params['column'] . ' ' . $params['order'];
+		}
+
+		$result = $report->conn->query($query);
+
+		$options = array();
+
+		if (isset($params['all'])) {
+			$options[] = 'ALL';
+		}
+
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			$options[] = array(
+				'value' => $row['val'],
+				'display' => $row['disp']
+			);
+		}
+
+		return $options;
+	}
+
 	/**
 	 * @param \PhpReports\Report\GeneratedReport $report
 	 * @return mixed
@@ -55,7 +89,15 @@ class GeneratedReportType extends ReportTypeBase {
 			$sql = self::generateSql($reportModel);
 		}
 
+		foreach ($report->options['Variables'] as $variable => $value) {
+			$variables[$variable] = $value['default'];
+			if (array_key_exists($variable, $report->macros)) {
+				$variables[$variable] = $report->macros[$variable];
+			}
+		}
 
+		$sql = PhpReports\PhpReports::renderString($sql, $variables);
+		$sql = str_replace('\n', '', $sql);
 		$result = $report->conn->query($sql);
 		$rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
