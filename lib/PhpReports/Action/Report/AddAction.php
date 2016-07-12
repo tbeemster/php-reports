@@ -6,6 +6,7 @@ use PhpReports\Action\Action;
 use PhpReports\Model\Base\DatabaseSourceQuery;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\Report;
+use PhpReports\PhpReports;
 
 class AddAction extends Action {
 
@@ -43,6 +44,6 @@ class AddAction extends Action {
 
 		$report->save();
 
-		\Flight::redirect('/create-report/edit/?report=' . $report->getId());
+		\Flight::redirect(PhpReports::$request->base . '/create-report/edit/?report=' . $report->getId());
 	}
 }
