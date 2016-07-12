@@ -7,15 +7,15 @@ use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
 use PhpReports\PhpReports;
 
-class CreateReportController {
+class ManageReportController {
 
-	public function chooseTables($dataSource) {
+	public function add($dataSource) {
 		$dataSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
 
 		$templateVars = array(
 			'dataSource' => $dataSource
 		);
-		echo PhpReports::render('create_report/new_report', $templateVars);
+		echo PhpReports::render('ManageReport/add', $templateVars);
 	}
 
 
@@ -68,6 +68,6 @@ class CreateReportController {
 			'dataSource' => $report->getDatabaseSource(),
 			'chartTypes' => $chartTypes
 		);
-		echo PhpReports::render('create_report/choose_tables', $templateVars);
+		echo PhpReports::render('ManageReport/edit', $templateVars);
 	}
 }

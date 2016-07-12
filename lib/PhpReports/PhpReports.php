@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports;
 
-use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\Service\ReportService;
 
 class PhpReports {
@@ -261,13 +260,6 @@ class PhpReports {
 
 		$start = microtime(true);
 		echo self::render('html/report_list',$template_vars);
-	}
-
-	public static function configure() {
-		$dataSources = DatabaseSourceQuery::create()->find();
-		$template_vars['dataSources'] = $dataSources;
-
-		echo self::render('html/configure', $template_vars);
 	}
 
 	public static function listDashboards() {

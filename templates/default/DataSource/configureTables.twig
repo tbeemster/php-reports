@@ -16,13 +16,13 @@
             <h2>Configuration</h2>
             <ol class="nav bs-sidenav">
                 <li>
-                    <a href="#Step 1">Manage Data Sources</a>
+                    <a href="{{ base }}/data-source/manage">Manage Data Sources</a>
                 </li>
                 <li class="active">
-                    <a href="/configure/saturn">Manage Tables</a>
+                    <a href="{{ base }}/data-source/configure-tables/{{ dataSource.databaseName }}">Data Types</a>
                 </li>
                 <li>
-                    <a href="#Step 3">Join Tables</a>
+                    <a href="{{ base }}/data-source/join-tables/{{ dataSource.databaseName }}/">Join Tables</a>
                 </li>
             </ol>
         </div>

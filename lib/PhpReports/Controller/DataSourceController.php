@@ -9,14 +9,21 @@ use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\PhpReports;
 use Propel\Runtime\ActiveQuery\Criteria;
 
-class ConfigureController {
+class DataSourceController {
+
+	public function manage() {
+		$dataSources = DatabaseSourceQuery::create()->find();
+		$template_vars['dataSources'] = $dataSources;
+
+		echo PhpReports::render('DataSource/manage', $template_vars);
+	}
 
 	/**
 	 * Manage a data source: show tables from the given data source.
 	 * @param string $dataSource
 	 * @throws \Propel\Runtime\Exception\PropelException
 	 */
-	public function manageDataSource($dataSource) {
+	public function configureTables($dataSource) {
 		$databaseSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
 		if (!$databaseSource instanceof DatabaseSource) {
 			echo 'Database ' . $dataSource . ' not found!';
@@ -31,7 +38,8 @@ class ConfigureController {
 			var_dump($pdoException);
 			exit();
 		}
-		echo $manageDatabase->configureTables();
+		$templateVars = array('tables' => $manageDatabase->getTables(), 'dataSource' => $manageDatabase->getDatabaseSource());
+		echo PhpReports::render('DataSource/configureTables', $templateVars);
 	}
 
 	public function joinTables($dataSource) {
@@ -39,7 +47,7 @@ class ConfigureController {
 		$tables = DatabaseTableQuery::create()->filterByDatabaseSource($dataSource)->filterByHidden(false)->orderByName(Criteria::ASC)->find();
 
 		$dbJoins = DatabaseJoinQuery::create()->filterByDatabaseSource($dataSource)->find();
-		$templateVars = array('dbJoins' => $dbJoins, 'tables' => $tables);
-		echo PhpReports::render('configure/join_tables', $templateVars);
+		$templateVars = array('dataSource' => $dataSource, 'dbJoins' => $dbJoins, 'tables' => $tables);
+		echo PhpReports::render('DataSource/joinTables', $templateVars);
 	}
 }

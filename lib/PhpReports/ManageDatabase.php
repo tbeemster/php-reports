@@ -1,10 +1,10 @@
 <?php
 namespace PhpReports;
 
-use PhpReports\Model\Base\DatabaseTableQuery;
 use PhpReports\Model\DatabaseColumn;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseTable;
+use PhpReports\Model\DatabaseTableQuery;
 
 class ManageDatabase {
 
@@ -39,12 +39,19 @@ class ManageDatabase {
 		return new \PDO($database['dsn'], $database['user'], $database['pass']);
 	}
 
-	public function configureTables() {
-		$templateVars = array('tables' => $this->getTables(), 'dataSource' => $this->databaseSource);
-		return PhpReports::render('html/manage_database', $templateVars);
+	/**
+	 * Returns the row count of the given table.
+	 *
+	 * @param string $tableName
+	 * @return int
+	 */
+	protected function getRowCount($tableName) {
+		$result = $this->database->query("SELECT COUNT(*) FROM " . $tableName);
+		$count = $result->fetch();
+		return current($count);
 	}
 
-	protected function getTables() {
+	public function getTables() {
 		$result = $this->database->query("SHOW TABLES");
 		$tables = $result->fetchAll(\PDO::FETCH_ASSOC);
 
@@ -68,18 +75,6 @@ class ManageDatabase {
 			$i++;
 		}
 		return $rows;
-	}
-
-	/**
-	 * Returns the row count of the given table.
-	 *
-	 * @param string $tableName
-	 * @return int
-	 */
-	protected function getRowCount($tableName) {
-		$result = $this->database->query("SELECT COUNT(*) FROM " . $tableName);
-		$count = $result->fetch();
-		return current($count);
 	}
 
 	/**
@@ -108,6 +103,10 @@ class ManageDatabase {
 		}
 		$dbTable->save();
 		return $dbTable;
+	}
+
+	public function getDatabaseSource() {
+		return $this->databaseSource;
 	}
 
 }
