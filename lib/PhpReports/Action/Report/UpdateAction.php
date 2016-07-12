@@ -4,6 +4,7 @@ namespace PhpReports\Action\Report;
 use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\DatabaseSource;
+use PhpReports\Model\Map\VariableTableMap;
 use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
 use PhpReports\Model\Variable;
@@ -55,6 +56,21 @@ class UpdateAction extends Action {
 	/** @string */
 	protected $variableMultiple;
 
+	/** @var string */
+	protected $databaseTable;
+
+	/** @var string */
+	protected $databaseColumn;
+
+	/** @var string */
+	protected $databaseDisplay;
+
+	/** @var string */
+	protected $databaseWhere;
+
+	/** @var boolean */
+	protected $databaseAll;
+
 	public function collect() {
 		$this->request = \Flight::request();
 		$this->report = ReportQuery::create()->findOneById($this->request->data['report']);
@@ -71,6 +87,12 @@ class UpdateAction extends Action {
 		$this->variableDefault = $this->request->data['variable_default'];
 		$this->variableEmpty = $this->request->data['variable_empty'];
 		$this->variableMultiple = $this->request->data['variable_multiple'];
+
+		$this->databaseTable = $this->request->data['database_table'];
+		$this->databaseColumn = $this->request->data['database_column'];
+		$this->databaseDisplay = $this->request->data['database_display'];
+		$this->databaseWhere = $this->request->data['database_where'];
+		$this->databaseAll = $this->request->data['database_all'];
 	}
 
 	public function validate() {
@@ -94,8 +116,15 @@ class UpdateAction extends Action {
 			->setType($this->variableType)
 			->setDefaultValue($this->variableDefault)
 			->setEmpty($this->variableEmpty)
-			->setMultiple($this->variableMultiple)
-			->save();
+			->setMultiple($this->variableMultiple);
+		if ($this->variableType == VariableTableMap::COL_TYPE_SELECT) {
+			$variable->setDatabaseTable($this->databaseTable)
+				->setDatabaseColumn($this->databaseColumn)
+				->setDatabaseDisplay($this->databaseDisplay)
+				->setDatabaseWhere($this->databaseWhere)
+				->setDatabaseAll($this->databaseAll);
+		}
+		$variable->save();
 
 		$this->report->addVariable($variable);
 

@@ -165,6 +165,7 @@ class GeneratedReport extends Report {
 			$charts[0]['datatypes'][] = $column[1];
 			$i++;
 		}
+		return $charts;
 	}
 }
 ?>
