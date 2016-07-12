@@ -4,9 +4,8 @@ use PhpReports\Model\DatabaseJoin;
 use PhpReports\Model\DatabaseTable;
 use PhpReports\Model\Report as ReportModel;
 use PhpReports\Report;
-use PhpReports\ReportTypeBase;
 
-class GeneratedReportType extends ReportTypeBase {
+class GeneratedReportType extends PdoReportType {
 
 	/**
 	 * Opens the PDO connection
@@ -25,52 +24,6 @@ class GeneratedReportType extends ReportTypeBase {
 
 		$report->conn = new PDO($dsn, $username, $password);
 		$report->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	}
-
-	/**
-	 * Closes the PDO connection
-	 * @param \PhpReports\Report\GeneratedReport $report
-	 */
-	public static function closeConnection(&$report) {
-		if (!isset($report->conn)) {
-			return;
-		}
-		$report->conn = null;
-		unset($report->conn);
-	}
-
-	public static function getVariableOptions($params, &$report) {
-		$displayColumn = $params['column'];
-		if (isset($params['display'])) {
-			$displayColumn = $params['display'];
-		}
-
-		$query = 'SELECT DISTINCT `' . $params['column'] . '` as val, `' . $displayColumn . '` as disp FROM ' . $params['table'];
-
-		if (isset($params['where'])) {
-			$query .= ' WHERE ' . $params['where'];
-		}
-
-		if (isset($params['order']) && in_array($params['order'], array('ASC', 'DESC'))) {
-			$query .= ' ORDER BY ' . $params['column'] . ' ' . $params['order'];
-		}
-
-		$result = $report->conn->query($query);
-
-		$options = array();
-
-		if (isset($params['all'])) {
-			$options[] = 'ALL';
-		}
-
-		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-			$options[] = array(
-				'value' => $row['val'],
-				'display' => $row['disp']
-			);
-		}
-
-		return $options;
 	}
 
 	/**
