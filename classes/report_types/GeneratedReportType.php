@@ -89,6 +89,7 @@ class GeneratedReportType extends ReportTypeBase {
 			$sql = self::generateSql($reportModel);
 		}
 
+		$variables = array();
 		foreach ($report->options['Variables'] as $variable => $value) {
 			$variables[$variable] = $value['default'];
 			if (array_key_exists($variable, $report->macros)) {
