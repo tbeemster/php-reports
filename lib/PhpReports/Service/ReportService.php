@@ -2,6 +2,8 @@
 namespace PhpReports\Service;
 
 use PhpReports\Model\Base\ReportQuery;
+use PhpReports\Model\Report;
+use PhpReports\PhpReports;
 
 class ReportService {
 
@@ -20,10 +22,12 @@ class ReportService {
 			'is_dir' => true
 		);
 
+		/** @var Report $child */
 		foreach ($children as $child) {
 			$reports['children'][] = array(
 				'Filters' => array(),
-				'Variables' => array(),
+				'Variables' => ($child->countVariables() > 0 ? true : false),
+				'Charts' => ($child->countReportColumns() > 0 ? true : false),
 				'Includes' => array(),
 				'Name' => $child->getName(),
 				'access' => 'readonly',
@@ -37,7 +41,7 @@ class ReportService {
 				'Type' => 'Gen',
 				'Database' => 'gen',
 				'report' => $child->getId(),
-				'url' => 'http://dev.yardinternet.nl/timothe/php-reports/report/generated/?report=' . $child->getId() . '/',
+				'url' => PhpReports::$config->base . '/report/generated/?report=' . $child->getId() . '/',
 				'is_dir' => false,
 				'Id' => $child->getId()
 			);
