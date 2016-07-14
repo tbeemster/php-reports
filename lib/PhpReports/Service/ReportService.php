@@ -41,7 +41,7 @@ class ReportService {
 				'Type' => 'Gen',
 				'Database' => 'gen',
 				'report' => $child->getId(),
-				'url' => PhpReports::$config->base . '/report/generated/?report=' . $child->getId() . '/',
+				'url' => PhpReports::$request->base . '/report/generated/?report=' . $child->getId() . '/',
 				'is_dir' => false,
 				'Id' => $child->getId()
 			);
