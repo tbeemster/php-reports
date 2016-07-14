@@ -97,9 +97,13 @@
         <column name="sql_mode" type="boolean" required="false"/>
         <column name="sql_code" type="longvarchar" required="false"/>
         <column name="database_source_id" type="integer" required="true"/>
+
+        <column name="created_at" type="timestamp"/>
+        <column name="updated_at" type="timestamp"/>
         <foreign-key foreignTable="database_source">
             <reference local="database_source_id" foreign="id"/>
         </foreign-key>
+        <behavior name="archivable"/>
     </table>
 
     <table name="report_column" isCrossRef="true">
@@ -114,7 +118,6 @@
             <reference local="database_column_id" foreign="id"/>
         </foreign-key>
     </table>
-
 
     <table name="variable">
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
@@ -139,6 +142,28 @@
         </foreign-key>
         <foreign-key foreignTable="variable">
             <reference local="variable_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="dashboard">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="varchar" size="255" required="false"/>
+
+        <column name="created_at" type="timestamp"/>
+        <column name="updated_at" type="timestamp"/>
+        <behavior name="archivable"/>
+    </table>
+
+    <table name="dashboard_report" isCrossRef="true">
+        <column name="dashboard_id" type="integer" primaryKey="true"/>
+        <column name="report_id" type="integer" primaryKey="true"/>
+        <column name="type" type="enum" valueSet="chart,table" primaryKey="true"/>
+        <column name="count" type="integer"/>
+        <foreign-key foreignTable="dashboard">
+            <reference local="dashboard_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="report">
+            <reference local="report_id" foreign="id"/>
         </foreign-key>
     </table>
 

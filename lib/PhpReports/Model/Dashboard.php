@@ -2,11 +2,11 @@
 
 namespace PhpReports\Model;
 
-use PhpReports\Model\Base\Report as BaseReport;
+use PhpReports\Model\Base\Dashboard as BaseDashboard;
 use Propel\Runtime\Connection\ConnectionInterface;
 
 /**
- * Skeleton subclass for representing a row from the 'report' table.
+ * Skeleton subclass for representing a row from the 'dashboard' table.
  *
  *
  *
@@ -15,8 +15,7 @@ use Propel\Runtime\Connection\ConnectionInterface;
  * long as it does not already exist in the output directory.
  *
  */
-class Report extends BaseReport
-{
+class Dashboard extends BaseDashboard {
 
 	public function preInsert(ConnectionInterface $con = null) {
 		$this->setCreatedAt(time());
@@ -27,10 +26,6 @@ class Report extends BaseReport
 	public function preUpdate(ConnectionInterface $con = null) {
 		$this->setUpdatedAt(time());
 		return true;
-	}
-
-	public function __toString() {
-		return $this->getId() . '';
 	}
 
 }
