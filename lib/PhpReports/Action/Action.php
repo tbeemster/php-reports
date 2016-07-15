@@ -3,6 +3,9 @@ namespace PhpReports\Action;
 
 abstract class Action {
 
+	/** @var array<\Exception> */
+	protected $validationErrors;
+
 	/** @var string */
 	protected $redirectUrl;
 
@@ -39,6 +42,13 @@ abstract class Action {
 	 */
 	public function getRedirectUrl() {
 		return $this->redirectUrl;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getValidationErrors() {
+		return $this->validationErrors;
 	}
 
 }

@@ -3,6 +3,7 @@
 namespace PhpReports\Model;
 
 use PhpReports\Model\Base\Dashboard as BaseDashboard;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Connection\ConnectionInterface;
 
 /**
@@ -26,6 +27,14 @@ class Dashboard extends BaseDashboard {
 	public function preUpdate(ConnectionInterface $con = null) {
 		$this->setUpdatedAt(time());
 		return true;
+	}
+
+	/**
+	 * Returns the reports sorted by Rank
+	 * @return DashboardReport[]|\Propel\Runtime\Collection\ObjectCollection
+	 */
+	public function getDashboardReportsByRank() {
+		return DashboardReportQuery::create()->orderByRank(Criteria::ASC)->findByDashboardId($this->getId());
 	}
 
 }

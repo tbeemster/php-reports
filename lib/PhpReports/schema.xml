@@ -154,17 +154,20 @@
         <behavior name="archivable"/>
     </table>
 
-    <table name="dashboard_report" isCrossRef="true">
+    <table name="dashboard_report">
         <column name="dashboard_id" type="integer" primaryKey="true"/>
         <column name="report_id" type="integer" primaryKey="true"/>
         <column name="type" type="enum" valueSet="chart,table" primaryKey="true"/>
-        <column name="count" type="integer"/>
         <foreign-key foreignTable="dashboard">
             <reference local="dashboard_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="report">
             <reference local="report_id" foreign="id"/>
         </foreign-key>
+        <behavior name="sortable">
+            <parameter name="use_scope" value="true"/>
+            <parameter name="scope_column" value="dashboard_id"/>
+        </behavior>
     </table>
 
 </database>

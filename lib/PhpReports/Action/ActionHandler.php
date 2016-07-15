@@ -46,6 +46,7 @@ class ActionHandler {
 		}
 		else {
 			var_dump(\Flight::request());
+			var_dump($this->action->getValidationErrors());
 			throw new ValidatorException('The action: ' . get_class($this->action) . ' could not be validated');
 		}
 	}

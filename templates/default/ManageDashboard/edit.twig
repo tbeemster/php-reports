@@ -1,0 +1,117 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Configure Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        {% for report in dashboard.dashboardReports %}
+        {% if report.type != 'chart' %}
+        var report_data = {
+            macros: {},
+            report: {{ report.report.id }}
+        };
+        $.get('{{ base }}/report/{{ report.type }}/', report_data, function (response) {
+            $('#report-{{ report.report.id }}').empty().html(response);
+        });
+        {% endif %}
+        {% endfor %}
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Add Report</h2>
+            <form method="post">
+                <input type="hidden" name="dashboard" value="{{ dashboard.id }}"/>
+                <input type="hidden" name="subject" value="dashboard"/>
+                <input type="hidden" name="action" value="add-report"/>
+
+                <label for="report">Report</label><br/>
+                {% for dataSource in dataSources %}
+                    <button type="button" class="btn btn-link collapsed" data-toggle="collapse"
+                            data-target="#dataSource{{ dataSource.id }}">{{ dataSource.databaseName }}
+                    </button>
+                    <div class="collapse" id="dataSource{{ dataSource.id }}">
+                        {% for report in dataSource.reports %}
+                            <label>
+                                <input type="radio" name="report" value="{{ report.id }}">{{ report.name }}
+                            </label>
+                            <br/>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <br/>
+                <input type="submit" value="Add" class="btn btn-default"/>
+            </form>
+        </div>
+
+        <div class="col-lg-10 col-md-9 col-xs-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <form method="post" id="updateDashboard">
+                        <input type="hidden" name="subject" value="dashboard"/>
+                        <input type="hidden" name="action" value="update"/>
+                        <input type="hidden" name="dashboard" value="{{ dashboard.id }}"/>
+
+                        <h1 class="visible-phone">Edit dashboard</h1>
+
+                        <label for="name">Dashboard name:</label>
+                        <input type="text" size="30" name="name" id="name" placeholder="Dashboard name"
+                               value="{{ dashboard.name }}" class="form-control"/>
+
+                        <input type="submit" value="Update" class="btn btn-primary"/>
+                    </form>
+                </div>
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    {% for report in dashboard.dashboardReportsByRank %}
+                        <div class="col-lg-4">
+                            <h3 style="height: 50px;">
+                                <form action="index.php" method="post">
+                                    <input type="hidden" name="subject" value="dashboard"/>
+                                    <input type="hidden" name="action" value="move-report"/>
+                                    <input type="hidden" name="dashboard" value="{{ report.dashboardId }}"/>
+                                    <input type="hidden" name="rank" value="{{ report.rank }}"/>
+
+                                    <div class="btn-group">
+                                        {% if report.isFirst == false %}
+                                            <button type="submit" name="direction" value="up"
+                                                    class="btn btn-default btn-sm"
+                                                    aria-label="Move up">
+                                                <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                                            </button>
+                                        {% endif %}
+                                        {% if report.isLast == false %}
+                                            <button type="submit" name="direction" value="down"
+                                                    class="btn btn-default  btn-sm"
+                                                    aria-label="Move down">
+                                                <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                    {{ report.report.name }}
+                                    (Rank: {{ report.rank }})
+                                </form>
+                            </h3>
+                            <div id="report-{{ report.report.id }}">
+                                {% if report.type == 'chart' %}
+                                    <iframe src="{{ base }}/report/{{ report.type }}/?report={{ report.report.id }}"
+                                            border="0" width="100%" height="400" scrolling="no"
+                                            style="border:0;"></iframe>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
