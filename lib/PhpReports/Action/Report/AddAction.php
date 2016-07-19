@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\Report;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\Base\DatabaseSourceQuery;
 use PhpReports\Model\DatabaseSource;
@@ -9,9 +8,6 @@ use PhpReports\Model\Report;
 use PhpReports\PhpReports;
 
 class AddAction extends Action {
-
-	/** @var Request */
-	protected $request;
 
 	/** @var string */
 	protected $name;
@@ -23,7 +19,6 @@ class AddAction extends Action {
 	protected $dataSource;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$this->name = $this->request->data['name'];
 		$this->type = $this->request->data['report_type'];
 		$this->dataSource = DatabaseSourceQuery::create()->findOneById((int)$this->request->data['dataSource']);

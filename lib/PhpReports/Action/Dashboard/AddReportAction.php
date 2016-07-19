@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\Dashboard;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\Dashboard;
 use PhpReports\Model\DashboardQuery;
@@ -13,9 +12,6 @@ use Propel\Runtime\Exception\ClassNotFoundException;
 
 class AddReportAction extends Action {
 
-	/** @var Request */
-	protected $request;
-
 	/** @var Dashboard */
 	protected $dashboard;
 
@@ -23,7 +19,6 @@ class AddReportAction extends Action {
 	protected $report;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$this->dashboard = DashboardQuery::create()->findOneById((int)$this->request->data['dashboard']);
 		$this->report = ReportQuery::create()->findOneById((int)$this->request->data['report']);
 	}

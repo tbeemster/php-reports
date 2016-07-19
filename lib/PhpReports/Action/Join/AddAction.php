@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\Join;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\Base\DatabaseColumn;
 use PhpReports\Model\Base\DatabaseColumnQuery;
@@ -9,9 +8,6 @@ use PhpReports\Model\Base\DatabaseSource;
 use PhpReports\Model\DatabaseJoin;
 
 class AddAction extends Action {
-
-	/** @var Request */
-	protected $request;
 
 	/** @var DatabaseColumn */
 	protected $localColumn;
@@ -26,7 +22,6 @@ class AddAction extends Action {
 	protected $alias;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$local = (int)$this->request->data['local_table'];
 		$this->localColumn = DatabaseColumnQuery::create()->findOneById($local);
 

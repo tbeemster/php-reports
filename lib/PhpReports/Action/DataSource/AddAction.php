@@ -1,15 +1,11 @@
 <?php
 namespace PhpReports\Action\DataSource;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\ManageDatabase;
 use PhpReports\Model\DatabaseSource;
 
 class AddAction extends Action {
-
-	/** @var Request */
-	protected $request;
 
 	/** @var DatabaseSource */
 	protected $databaseSource;
@@ -18,7 +14,6 @@ class AddAction extends Action {
 	protected $manageDatabase;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$dbms = $this->request->data['dbms'];
 		$host = $this->request->data['host'];
 		$databaseName = $this->request->data['database_name'];

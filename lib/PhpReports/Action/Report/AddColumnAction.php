@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\Report;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\DatabaseColumn;
 use PhpReports\Model\DatabaseColumnQuery;
@@ -10,9 +9,6 @@ use PhpReports\Model\ReportQuery;
 
 class AddColumnAction extends Action {
 
-	/** @var Request */
-	protected $request;
-
 	/** @var Report */
 	protected $report;
 
@@ -20,7 +16,6 @@ class AddColumnAction extends Action {
 	protected $column;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$this->report = ReportQuery::create()->findOneById($this->request->data['report']);
 		$this->column = DatabaseColumnQuery::create()->findOneById($this->request->data['column']);
 	}

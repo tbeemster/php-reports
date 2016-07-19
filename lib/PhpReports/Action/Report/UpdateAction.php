@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\Report;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\Map\VariableTableMap;
@@ -10,9 +9,6 @@ use PhpReports\Model\ReportQuery;
 use PhpReports\Model\Variable;
 
 class UpdateAction extends Action {
-
-	/** @var Request */
-	protected $request;
 
 	/** @var Report */
 	protected $report;
@@ -72,7 +68,6 @@ class UpdateAction extends Action {
 	protected $databaseAll;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$this->report = ReportQuery::create()->findOneById($this->request->data['report']);
 		$this->name = $this->request->data['name'];
 		$this->type = $this->request->data['report_type'];

@@ -1,21 +1,16 @@
 <?php
 namespace PhpReports\Action\Dashboard;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\Dashboard;
 use PhpReports\PhpReports;
 
 class AddAction extends Action {
 
-	/** @var Request */
-	protected $request;
-
 	/** @var string */
 	protected $name;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$this->name = $this->request->data['name'];
 	}
 

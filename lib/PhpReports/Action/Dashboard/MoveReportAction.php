@@ -1,16 +1,12 @@
 <?php
 namespace PhpReports\Action\Dashboard;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\DashboardReport;
 use PhpReports\Model\DashboardReportQuery;
 use Propel\Runtime\Exception\ClassNotFoundException;
 
 class MoveReportAction extends Action {
-
-	/** @var Request */
-	protected $request;
 
 	/** @var DashboardReport */
 	protected $dashboardReport;
@@ -19,7 +15,6 @@ class MoveReportAction extends Action {
 	protected $direction;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$rank = $this->request->data['rank'];
 		$dashboard = $this->request->data['dashboard'];
 		$this->direction = $this->request->data['direction'];

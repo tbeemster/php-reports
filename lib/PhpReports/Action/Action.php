@@ -1,7 +1,12 @@
 <?php
 namespace PhpReports\Action;
 
+use flight\net\Request;
+
 abstract class Action {
+
+	/** @var Request */
+	protected $request;
 
 	/** @var array<\Exception> */
 	protected $validationErrors;
@@ -18,7 +23,8 @@ abstract class Action {
 	 * Sets the redirect url to the referrer url.
 	 */
 	public function __construct() {
-		$this->redirectUrl = \Flight::request()->referrer;
+		$this->request = \Flight::request();
+		$this->redirectUrl = $this->request->referrer;
 	}
 
 	/**

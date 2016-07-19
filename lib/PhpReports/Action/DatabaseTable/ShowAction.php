@@ -1,7 +1,6 @@
 <?php
 namespace PhpReports\Action\DatabaseTable;
 
-use flight\net\Request;
 use PhpReports\Action\Action;
 use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
@@ -10,9 +9,6 @@ use PhpReports\Model\DatabaseTableQuery;
 
 class ShowAction extends Action {
 
-	/** @var Request */
-	protected $request;
-
 	/** @var DatabaseSource */
 	protected $databaseSource;
 
@@ -20,7 +16,6 @@ class ShowAction extends Action {
 	protected $databaseTable;
 
 	public function collect() {
-		$this->request = \Flight::request();
 		$databaseSourceId = (int)$this->request->data['database-source'];
 		$databaseTableId = (int)$this->request->data['database-table'];
 		$this->databaseSource = DatabaseSourceQuery::create()->findOneById($databaseSourceId);
