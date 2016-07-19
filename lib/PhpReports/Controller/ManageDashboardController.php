@@ -34,4 +34,9 @@ class ManageDashboardController {
 		);
 		echo PhpReports::render('ManageDashboard/edit', $templateVars);
 	}
+
+	public function showAll() {
+		$dashboards = DashboardQuery::create()->find();
+		echo PhpReports::render('ManageDashboard/showAll', array('dashboards' => $dashboards));
+	}
 }

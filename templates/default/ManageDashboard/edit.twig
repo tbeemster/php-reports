@@ -75,7 +75,7 @@
                     {% for report in dashboard.dashboardReportsByRank %}
                         <div class="col-lg-4">
                             <h3 style="height: 50px;">
-                                <form action="index.php" method="post">
+                                <form action="index.php" method="post" style="display: inline-block;">
                                     <input type="hidden" name="subject" value="dashboard"/>
                                     <input type="hidden" name="action" value="move-report"/>
                                     <input type="hidden" name="dashboard" value="{{ report.dashboardId }}"/>
@@ -91,7 +91,7 @@
                                         {% endif %}
                                         {% if report.isLast == false %}
                                             <button type="submit" name="direction" value="down"
-                                                    class="btn btn-default  btn-sm"
+                                                    class="btn btn-default btn-sm"
                                                     aria-label="Move down">
                                                 <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
                                             </button>
@@ -99,6 +99,16 @@
                                     </div>
                                     {{ report.report.name }}
                                     (Rank: {{ report.rank }})
+                                </form>
+                                <form action="index.php" method="post" style="display: inline-block;">
+                                    <input type="hidden" name="subject" value="dashboard"/>
+                                    <input type="hidden" name="action" value="delete-report"/>
+                                    <input type="hidden" name="dashboard" value="{{ report.dashboardId }}"/>
+                                    <input type="hidden" name="rank" value="{{ report.rank }}"/>
+
+                                    <button type="submit" class="btn btn-danger btn-sm" aria-label="Delete">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </button>
                                 </form>
                             </h3>
                             <div id="report-{{ report.report.id }}">
