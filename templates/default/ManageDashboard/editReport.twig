@@ -1,0 +1,80 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Configure Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        {% for report in dashboard.dashboardReports %}
+        {% if report.type != 'chart' %}
+        var report_data = {
+            macros: {},
+            report: {{ report.report.id }}
+        };
+        $.get('{{ base }}/report/{{ report.type }}/', report_data, function (response) {
+            $('#report-{{ report.report.id }}').empty().html(response);
+        });
+        {% endif %}
+        {% endfor %}
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Edit Report</h2>
+            <form method="post">
+                <input type="hidden" name="subject" value="dashboard"/>
+                <input type="hidden" name="action" value="update-report"/>
+                <input type="hidden" name="dashboardReport" value="{{ dashboardReport.id }}"/>
+
+                <label for="report">Report {{ dashboardReport.type }}</label><br/>
+
+                <select name="type" class="form-control">
+                    {% for type in dashboardReport.types %}
+                        <option name="type" value="{{ type }}"
+                                {% if dashboardReport.type == type %}selected="selected"{% endif %}>{{ type|capitalize }}</option>
+                    {% endfor %}
+                </select>
+
+                {% for variable in dashboardReport.report.variables %}
+                    <label for="variable-{{ variable.id }}">{{ variable.displayName }}</label>
+                    <input type="hidden" name="variable" value="{{ variable.name }}"/>
+                    {% if variable.type == 'text' %}
+                        <input type="text" name="defaultValue"/>
+                    {% elseif variable.type == 'textarea' %}
+                        <textarea name="defaultValue"></textarea>
+                    {% elseif variable.type == 'select' %}
+                        <select name="defaultValue">
+                            <option>Hallo</option>
+                        </select>
+                    {% elseif variable.type == 'date' %}
+                        <input type="date" name="defaultValue"/>
+                    {% elseif variable.type == 'daterange' %}
+                        <input type="date" name="defaultValue1"/>
+                        <input type="date" name="defaultValue2"/>
+                    {% endif %}
+                {% endfor %}
+
+                <input type="submit" value="Update" class="btn btn-default"/>
+            </form>
+        </div>
+
+        <div class="col-lg-10 col-md-9 col-xs-12">
+            <div class="col-lg-6">
+                <div id="report-{{ dashboardReport.report.report.id }}">
+                    <iframe src="{{ base }}/report/{{ dashboardReport.type }}/?report={{ dashboardReport.report.id }}"
+                            border="0" width="100%" height="400" scrolling="no"
+                            style="border:0;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

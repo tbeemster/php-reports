@@ -103,13 +103,16 @@
                                 <form action="index.php" method="post" style="display: inline-block;">
                                     <input type="hidden" name="subject" value="dashboard"/>
                                     <input type="hidden" name="action" value="delete-report"/>
-                                    <input type="hidden" name="dashboard" value="{{ report.dashboardId }}"/>
-                                    <input type="hidden" name="rank" value="{{ report.rank }}"/>
+                                    <input type="hidden" name="dashboardReport" value="{{ report.id }}"/>
 
                                     <button type="submit" class="btn btn-danger btn-sm" aria-label="Delete">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                     </button>
                                 </form>
+                                <a href="{{ base }}/manage-dashboard/edit-report/?dashboardReport={{ report.id }}"
+                                   aria-label="Edit" class="btn btn-sm btn-warning">
+                                    <i class="glyphicon glyphicon-edit" aria-hidden="true"></i>
+                                </a>
                             </h3>
                             <div id="report-{{ report.report.id }}">
                                 {% if report.type == 'chart' %}

@@ -3,6 +3,7 @@
 namespace PhpReports\Model;
 
 use PhpReports\Model\Base\DashboardReport as BaseDashboardReport;
+use PhpReports\Model\Map\DashboardReportTableMap;
 
 /**
  * Skeleton subclass for representing a row from the 'dashboard_report' table.
@@ -16,5 +17,9 @@ use PhpReports\Model\Base\DashboardReport as BaseDashboardReport;
  */
 class DashboardReport extends BaseDashboardReport
 {
+
+	public function getTypes() {
+		return DashboardReportTableMap::getValueSet(DashboardReportTableMap::COL_TYPE);
+	}
 
 }

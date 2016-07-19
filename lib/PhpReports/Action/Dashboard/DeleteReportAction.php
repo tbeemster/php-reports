@@ -11,10 +11,7 @@ class DeleteReportAction extends Action {
 	protected $dashboardReport;
 
 	public function collect() {
-		$rank = $this->request->data['rank'];
-		$dashboard = $this->request->data['dashboard'];
-
-		$this->dashboardReport = DashboardReportQuery::create()->findOneByRank($rank, $dashboard);
+		$this->dashboardReport = DashboardReportQuery::create()->findOneById((int)$this->request->data['dashboardReport']);
 	}
 
 	public function validate() {
