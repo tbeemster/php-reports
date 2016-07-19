@@ -2,6 +2,7 @@
 namespace PhpReports\Controller;
 
 use PhpReports\Model\Base\DatabaseJoinQuery;
+use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
@@ -9,11 +10,14 @@ use PhpReports\PhpReports;
 
 class ManageReportController {
 
-	public function add($dataSource) {
-		$dataSource = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSource);
+	public function add($dataSources = null) {
+		$dataSources = DatabaseSourceQuery::create()->findOneByDatabaseName($dataSources);
+		if (!$dataSources instanceof DatabaseSource) {
+			$dataSources = DatabaseSourceQuery::create()->find();
+		}
 
 		$templateVars = array(
-			'dataSource' => $dataSource
+			'dataSources' => $dataSources
 		);
 		echo PhpReports::render('ManageReport/add', $templateVars);
 	}

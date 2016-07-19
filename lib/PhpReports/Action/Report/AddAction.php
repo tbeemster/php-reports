@@ -39,6 +39,6 @@ class AddAction extends Action {
 
 		$report->save();
 
-		\Flight::redirect(PhpReports::$request->base . '/create-report/edit/?report=' . $report->getId());
+		\Flight::redirect(PhpReports::$request->base . '/manage-report/edit/?report=' . $report->getId());
 	}
 }

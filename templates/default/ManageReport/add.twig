@@ -16,13 +16,25 @@
             <form method="post">
                 <input type="hidden" name="subject" value="report"/>
                 <input type="hidden" name="action" value="add"/>
-                <input type="hidden" name="dataSource" value="{{ dataSource.id }}"/>
+                {% if dataSources.count == 1 %}
+                    <input type="hidden" name="dataSource" value="{{ dataSources.first.id }}"/>
+                {% endif %}
 
                 <h1 class="visible-phone">Create a report</h1>
 
                 <label for="name">Report name:</label>
                 <input type="text" size="30" name="name" id="name" placeholder="Report name" value="{{ report.name }}"
                        class="form-control"/>
+
+                {% if dataSources.count > 1 %}
+                    <label for="name">Data source:</label>
+                    <select name="dataSource" class="form-control
+">
+                        {% for dataSource in dataSources %}
+                            <option value="{{ dataSource.id }}">{{ dataSource.databaseName }}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
 
                 <label for="report_type">Rapport type</label>
                 <select name="report_type" id="report_type" class="form-control">
