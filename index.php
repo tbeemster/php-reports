@@ -85,32 +85,6 @@ Flight::route('/email',function() {
 	PhpReports::emailReport();
 });
 
-Flight::route('/action/@subNamespace/@action/*', function ($subNamespace, $action) {
-	$action = strtolower($action);
-	$action = ucwords($action, "\t\n\r\f\v-_");
-	$action = str_replace('-', '', $action);
-
-	$subNamespace = strtolower($subNamespace);
-	$subNamespace = ucwords($subNamespace, "\t\n\r\f\v-_");
-	$subNamespace = str_replace('-', '', $subNamespace);
-
-	$fullyQualifiedNamespace = '\\PhpReports\\Action\\' . $subNamespace . '\\' . $action . 'Action';
-
-	if (!class_exists($fullyQualifiedNamespace)) {
-		throw new ClassNotFoundException('Class ' . $fullyQualifiedNamespace . ' has not been found');
-	}
-
-	/** @var \PhpReports\Action\Action $action */
-	$action = new $fullyQualifiedNamespace();
-	$action->collect();
-	if ($action->validate()) {
-		$action->execute();
-	}
-	else {
-		die('Not validated');
-	}
-});
-
 Flight::route('/@controller/@action(/@parameter)', function ($controller, $action, $parameter = null) {
 	$controller = strtolower($controller);
 	$controller = ucwords($controller, "\t\n\r\f\v-_");

@@ -108,6 +108,7 @@
                                     <p>A CSV file will be attached and a link will be sent</p>
 
                                     <form class="form-horizontal" role="form">
+                                        <input type="hidden" name="reportId" value="{{ report.id }}" id="email-report-modal-report"/>
                                         <div class="form-group">
                                             <label class="col-lg-5" for='email-report-modal-email'>Recipient Email Address</label>
                                             <div class="col-lg-7">
@@ -145,6 +146,7 @@
                                     email: $('#email-report-modal-email').val(),
                                     subject: $('#email-report-modal-subject').val(),
                                     message: $('#email-report-modal-message').val(),
+                                    reportId: $('#email-report-modal-report').val(),
                                     url: window.location.href
                                 };
 

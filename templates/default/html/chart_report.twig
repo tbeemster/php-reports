@@ -8,7 +8,8 @@
 	<script type="text/javascript">
 	function drawCharts() {
 		{% for chart in Charts %}
-			var data_{{chart.num}} = new google.visualization.DataTable();
+
+        var data_{{ chart.num }} = new google.visualization.DataTable();
 					
 			{% for key,value in chart.Rows[0].values %}
                 {% if chart.roles[key] %} 
@@ -108,7 +109,26 @@
                     });
             });
         {% endif %}
-            chart_{{chart.num}}.draw(data_{{chart.num}}, options_{{chart.num}});
+
+        chart_{{chart.num}}.draw(data_{{ chart.num }}, options_{{ chart.num }});
+        var image = chart_{{ chart.num }}.getImageURI();
+
+        var data = {
+            'subject': 'dashboard',
+            'action': 'add-chart-report',
+            'report': '{{ report.id }}',
+            'chart': image
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '{{ base }}/index.php',
+            data: data,
+            success: function (result) {
+            },
+            error: function (result) {
+            }
+        });
 		{% endfor %}
 	}
 

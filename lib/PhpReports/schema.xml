@@ -97,6 +97,8 @@
         <column name="sql_mode" type="boolean" required="false"/>
         <column name="sql_code" type="longvarchar" required="false"/>
         <column name="database_source_id" type="integer" required="true"/>
+        <column name="chart_image" type="longvarchar" required="false"/>
+        <column name="chart_image_updated_at" type="timestamp" required="false"/>
 
         <column name="created_at" type="timestamp"/>
         <column name="updated_at" type="timestamp"/>

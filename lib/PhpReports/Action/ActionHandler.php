@@ -42,13 +42,37 @@ class ActionHandler {
 		$this->action->collect();
 		if ($this->action->validate()) {
 			$this->action->execute();
-			\Flight::redirect($this->action->getRedirectUrl());
+			if ($this->isAjaxRequest()) {
+				header('Content-Type: application/json');
+				echo json_encode(array('status' => 200));
+				exit();
+			}
+			else {
+				\Flight::redirect($this->action->getRedirectUrl());
+			}
 		}
 		else {
-			var_dump(\Flight::request());
-			var_dump($this->action->getValidationErrors());
-			throw new ValidatorException('The action: ' . get_class($this->action) . ' could not be validated');
+			if ($this->isAjaxRequest()) {
+				header('Content-Type: application/json');
+				echo json_encode(
+					array(
+						'status' => 503,
+						'request' => \Flight::request(),
+						'errors' => $this->action->getValidationErrors()
+					)
+				);
+				exit();
+			}
+			else {
+				var_dump(\Flight::request());
+				var_dump($this->action->getValidationErrors());
+				throw new ValidatorException('The action: ' . get_class($this->action) . ' could not be validated');
+			}
 		}
+	}
+
+	protected function isAjaxRequest() {
+		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 	}
 
 	/**
