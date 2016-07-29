@@ -30,43 +30,39 @@
         <div id="report_list" class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
             <h1 class="visible-phone">All Data Sources</h1>
             <div class="well well-small">
-                <ul>
+                <table cellspacing="0" cellpadding="3">
+                    <thead>
+                    <tr>
+                        <th>Data source</th>
+                        <th>Configure</th>
+                        <th>Edit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {% for dataSource in dataSources %}
-                        <li>
-                            <a href="{{ base }}/data-source/configure-tables/{{ dataSource.databaseName }}">{{ dataSource.databaseName }}</a>
-                        </li>
+                        <tr>
+                            <td>{{ dataSource.databaseName }}</td>
+                            <td style="text-align: center;">
+
+                                <a href="{{ base }}/data-source/configure-tables/{{ dataSource.databaseName }}"
+                                   class="btn btn-info btn-xs">
+                                    <i class="glyphicon glyphicon-cog" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ base }}/data-source/configure-tables/{{ dataSource.databaseName }}"
+                                   class="btn btn-warning btn-xs">
+                                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                    </tbody>
+                </table>
             </div>
             <div class="well well-small">
                 <div>
-                    <form action="" method="post">
-                        <input type="hidden" name="subject" value="data-source"/>
-                        <input type="hidden" name="action" value="add"/>
-
-                        <label for="dbms">Database Management System</label>
-                        <select id="dbms" name="dbms" class="form-control">
-                            <option value="mysql" selected="selected">MySQL</option>
-                        </select><br/>
-
-                        <label for="host">Host</label>
-                        <input id="host" type="text" name="host" placeholder="Host" value="localhost"
-                               class="form-control"/><br/>
-
-                        <label for="database_name">Database name</label>
-                        <input id="database_name" type="text" name="database_name" placeholder="Database Name" value=""
-                               class="form-control"/><br/>
-
-                        <label for="user">User</label>
-                        <input id="user" type="text" name="username" placeholder="User" value=""
-                               class="form-control"/><br/>
-
-                        <label for="password">Password</label>
-                        <input id="password" type="password" name="password" placeholder="Password" value=""
-                               class="form-control"/><br/>
-
-                        <input type="submit" value="Configure" class="btn btn-primary"/>
-                    </form>
+                    {% include 'DataSource/update.twig' %}
                 </div>
             </div>
 
