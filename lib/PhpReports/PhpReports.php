@@ -1,6 +1,7 @@
 <?php
 namespace PhpReports;
 
+use PhpReports\Model\ReportQuery;
 use PhpReports\Service\ReportService;
 
 class PhpReports {
@@ -501,6 +502,13 @@ class PhpReports {
 		$body = $_REQUEST['message']? $_REQUEST['message'] : "You've been sent a database report!";
 		$email = $_REQUEST['email'];
 		$link = $_REQUEST['url'];
+		$image = '';
+		if ($_REQUEST['reportId']) {
+			$report = ReportQuery::create()->findOneById((int)$_REQUEST['reportId']);
+			if ($report instanceof \PhpReports\Model\Report) {
+				$image = '<img src="data:image/png;base64,' . $report->getChartImage() . '"><br>';
+			}
+		}
 		$csv_link = str_replace('report/html/?','report/csv/?',$link);
 		$table_link = str_replace('report/html/?','report/table/?',$link);
 		$text_link = str_replace('report/html/?','report/text/?',$link);
@@ -511,7 +519,7 @@ class PhpReports {
 		$text = self::urlDownload($text_link);
 
 		$email_text = $body."\n\n".$text."\n\nView the report online at $link";
-		$email_html = "<p>$body</p>$table<p>View the report online at <a href=\"".htmlentities($link)."\">".htmlentities($link)."</a></p>";
+		$email_html = "$image<p>$body</p>$table<p>View the report online at <a href=\"".htmlentities($link)."\">".htmlentities($link)."</a></p>";
 
 		// Create the message
 		$message = \Swift_Message::newInstance()
