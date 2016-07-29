@@ -1,6 +1,7 @@
 <form action="" method="post">
     <input type="hidden" name="subject" value="data-source"/>
     <input type="hidden" name="action" value="add"/>
+    <input type="hidden" name="dataSource" value="{{ dataSource.id }}"/>
 
     <label for="dbms">Database Management System</label>
     <select id="dbms" name="dbms" class="form-control">
@@ -8,19 +9,21 @@
     </select><br/>
 
     <label for="host">Host</label>
-    <input id="host" type="text" name="host" placeholder="Host" value="localhost"
+    <input id="host" type="text" name="host" placeholder="Host"
+           value="{% if dataSource.host %}{{ dataSource.host }}{% else %}localhost{% endif %}"
            class="form-control"/><br/>
 
     <label for="database_name">Database name</label>
-    <input id="database_name" type="text" name="database_name" placeholder="Database Name" value=""
+    <input id="database_name" type="text" name="database_name" placeholder="Database name"
+           value="{{ dataSource.databaseName }}"
            class="form-control"/><br/>
 
     <label for="user">User</label>
-    <input id="user" type="text" name="username" placeholder="User" value=""
+    <input id="user" type="text" name="username" placeholder="User" value="{{ dataSource.username }}"
            class="form-control"/><br/>
 
     <label for="password">Password</label>
-    <input id="password" type="password" name="password" placeholder="Password" value=""
+    <input id="password" type="password" name="password" placeholder="Password" value="{{ dataSource.password }}"
            class="form-control"/><br/>
 
     <input type="submit" value="Configure" class="btn btn-primary"/>

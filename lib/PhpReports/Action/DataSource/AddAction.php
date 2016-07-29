@@ -4,6 +4,7 @@ namespace PhpReports\Action\DataSource;
 use PhpReports\Action\Action;
 use PhpReports\ManageDatabase;
 use PhpReports\Model\DatabaseSource;
+use PhpReports\Model\DatabaseSourceQuery;
 
 class AddAction extends Action {
 
@@ -14,12 +15,17 @@ class AddAction extends Action {
 	protected $manageDatabase;
 
 	public function collect() {
+		$this->databaseSource = DatabaseSourceQuery::create()->findOneById((int)$this->request->data['dataSource']);
+		if (!$this->databaseSource instanceof DatabaseSource) {
+			$this->databaseSource = new DatabaseSource();
+		}
+
 		$dbms = $this->request->data['dbms'];
 		$host = $this->request->data['host'];
 		$databaseName = $this->request->data['database_name'];
 		$username = $this->request->data['username'];
 		$password = $this->request->data['password'];
-		$this->databaseSource = new DatabaseSource();
+
 		$this->databaseSource->setDbms($dbms)->setHost($host)->setDatabaseName($databaseName)->setUsername($username)->setPassword($password);
 	}
 
@@ -36,6 +42,5 @@ class AddAction extends Action {
 
 	public function execute() {
 		$this->databaseSource->save();
-		echo $this->manageDatabase->configureTables();
 	}
 }

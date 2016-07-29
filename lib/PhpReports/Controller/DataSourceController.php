@@ -50,4 +50,9 @@ class DataSourceController {
 		$templateVars = array('dataSource' => $dataSource, 'dbJoins' => $dbJoins, 'tables' => $tables);
 		echo PhpReports::render('DataSource/joinTables', $templateVars);
 	}
+
+	public function edit($dataSource) {
+		$dataSource = DatabaseSourceQuery::create()->findOneById((int)$dataSource);
+		echo PhpReports::render('DataSource/edit', array('dataSource' => $dataSource));
+	}
 }

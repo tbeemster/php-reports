@@ -1,0 +1,40 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Configure{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ base }}/public/css/report_list.css"/>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Configuration</h2>
+            <ol class="nav bs-sidenav">
+                <li class="active">
+                    <a href="{{ base }}/data-source/manage">Manage Data Sources</a>
+                </li>
+                <li class="disabled">
+                    <a href="">Data Types</a>
+                </li>
+                <li class="disabled">
+                    <a href="">Join Tables</a>
+                </li>
+            </ol>
+        </div>
+
+        <div class="col-lg-10 col-md-9 col-xs-12 col-lg-offset-2 col-md-offset-3">
+            <h1 class="visible-phone">{{ dataSource.databaseName }}</h1>
+            <div class="well well-small">
+                <div>
+                    {% include 'DataSource/editForm.twig' %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
