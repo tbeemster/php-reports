@@ -30,6 +30,16 @@
                 $('#databaseOptions').hide();
             }
         });
+
+        $('.populateFromDatabase').on('click', function () {
+            var variable = $(this).data('variable');
+            var databaseOptions = $('#databaseOptions' + variable);
+            if ($(this).is(':checked')) {
+                databaseOptions.show();
+            } else {
+                databaseOptions.hide();
+            }
+        });
     </script>
 
 {% endblock %}
@@ -148,7 +158,7 @@
                         {% for variable in report.variables %}
                             <li>
                                 {{ variable.displayName }}
-                                <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+                                <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
                                         data-target=".variableModal{{ variable.id }}">
                                     <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit
                                 </button>

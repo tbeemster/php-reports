@@ -44,14 +44,16 @@
                         </option>
                     </select>
 
-                    <div id="databaseOptions"
+                    <div class="checkbox">
+                        <label>
+                            <input id="populate{{ variable.id }}" class="populateFromDatabase" type="checkbox"
+                                   name="database_populate" value="1" data-variable="{{ variable.id }}"
+                                   {% if variable.populateFromDatabase != 0 %}checked="checked"{% endif %}/>
+                            Populate select box from a database query
+                        </label>
+                    </div>
+                    <div id="databaseOptions{{ variable.id }}"
                          {% if variable.type != 'select' %}style="display: none;"{% endif %}>
-                        <div class="col-lg-12">
-                            <button type="button" class="btn btn-secondary collapsed" data-toggle="collapse"
-                                    data-target="#databaseResults">Populate select with database results
-                            </button>
-                        </div>
-                        <div class="collapse" id="databaseResults">
                             <h3>Popuplate table with database results:</h3>
 
                             <label for="database_table">Database table:</label>
@@ -87,7 +89,6 @@
                                     Include 'all' option
                                 </label>
                             </div>
-                        </div>
                     </div>
 
                     <label for="variable_default">Default value:</label>

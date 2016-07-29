@@ -129,6 +129,7 @@
         <column name="default_value" type="varchar" size="255" required="false"/>
         <column name="empty" type="boolean" required="false"/>
         <column name="multiple" type="boolean" required="false"/>
+        <column name="database_populate" type="tinyint" size="1" required="false"/>
         <column name="database_table" type="varchar" size="255" required="false"/>
         <column name="database_column" type="varchar" size="255" required="false"/>
         <column name="database_display" type="varchar" size="255" required="false"/>
