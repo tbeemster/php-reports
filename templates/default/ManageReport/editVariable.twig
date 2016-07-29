@@ -1,94 +1,119 @@
-<label for="variable_name">Variable name (used in SQL statement)</label>
-<input name="variable_name" value="{{ variable.name }}" id="variable_name" type="text"
-       class="form-control"/>
+<div class="modal fade variableModal{{ variable.id }}" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="" method="post">
+                <input type="hidden" name="subject" value="report"/>
+                <input type="hidden" name="action" value="update-variable"/>
+                <input type="hidden" name="report" value="{{ report.id }}"/>
+                <input type="hidden" name="variable" value="{{ variable.id }}"/>
 
-<label for="display_name">Display name:</label>
-<input type="text" size="30" name="display_name" id="display_name" placeholder="Report name"
-       value="{{ variable.displayName }}"
-       class="form-control"/>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Edit {{ variable.displayName }}</h4>
+                </div>
+                <div class="modal-body">
+                    <label for="variable_name">Variable name (used in SQL statement)</label>
+                    <input name="variable_name" value="{{ variable.name }}" id="variable_name" type="text"
+                           class="form-control"/>
 
-<label for="variable_type">Type:</label>
-<select name="variable_type" id="variable_type"
-        class="form-control">
-    <option value="text"
-            {% if variable.type == 'text' %}selected="selected"{% endif %}>Text
-    </option>
-    <option value="select"
-            {% if variable.type == 'select' %}selected="selected"{% endif %}>Select
-    </option>
-    <option value="textarea"
-            {% if variable.type == 'textarea' %}selected="selected"{% endif %}>
-        Textarea
-    </option>
-    <option value="date"
-            {% if variable.type == 'date' %}selected="selected"{% endif %}>Date
-    </option>
-    <option value="daterange"
-            {% if variable.type == 'daterange' %}selected="selected"{% endif %}>
-        Daterange
-    </option>
-</select>
+                    <label for="display_name">Display name:</label>
+                    <input type="text" size="30" name="display_name" id="display_name" placeholder="Report name"
+                           value="{{ variable.displayName }}"
+                           class="form-control"/>
 
-<div id="databaseOptions"
-     {% if variable.type != 'select' %}style="display: none;"{% endif %}>
-    <div class="col-lg-12">
-        <button type="button" class="btn btn-secondary collapsed" data-toggle="collapse"
-                data-target="#databaseResults">Populate select with database results
-        </button>
-    </div>
-    <div class="collapse" id="databaseResults">
-        <h3>Popuplate table with database results:</h3>
+                    <label for="variable_type">Type:</label>
+                    <select name="variable_type" id="variable_type"
+                            class="form-control">
+                        <option value="text"
+                                {% if variable.type == 'text' %}selected="selected"{% endif %}>Text
+                        </option>
+                        <option value="select"
+                                {% if variable.type == 'select' %}selected="selected"{% endif %}>Select
+                        </option>
+                        <option value="textarea"
+                                {% if variable.type == 'textarea' %}selected="selected"{% endif %}>
+                            Textarea
+                        </option>
+                        <option value="date"
+                                {% if variable.type == 'date' %}selected="selected"{% endif %}>Date
+                        </option>
+                        <option value="daterange"
+                                {% if variable.type == 'daterange' %}selected="selected"{% endif %}>
+                            Daterange
+                        </option>
+                    </select>
 
-        <label for="database_table">Database table:</label>
-        <input type="text" size="30" name="database_table" id="database_table"
-               placeholder="Table" maxlength="255"
-               value="{{ variable.databaseTable }}"
-               class="form-control"/>
+                    <div id="databaseOptions"
+                         {% if variable.type != 'select' %}style="display: none;"{% endif %}>
+                        <div class="col-lg-12">
+                            <button type="button" class="btn btn-secondary collapsed" data-toggle="collapse"
+                                    data-target="#databaseResults">Populate select with database results
+                            </button>
+                        </div>
+                        <div class="collapse" id="databaseResults">
+                            <h3>Popuplate table with database results:</h3>
 
-        <label for="database_column">Database value column:</label>
-        <input type="text" size="30" name="database_column" id="database_column"
-               placeholder="Value column" maxlength="255"
-               value="{{ variable.databaseColumn }}"
-               class="form-control"/>
+                            <label for="database_table">Database table:</label>
+                            <input type="text" size="30" name="database_table" id="database_table"
+                                   placeholder="Table" maxlength="255"
+                                   value="{{ variable.databaseTable }}"
+                                   class="form-control"/>
 
-        <label for="database_display">Database column (optional column for the display value,
-            defaults
-            to value column):</label>
-        <input type="text" size="30" name="database_display" id="database_display"
-               placeholder="Display column" maxlength="255"
-               value="{{ variable.databaseDisplay }}"
-               class="form-control"/>
+                            <label for="database_column">Database value column:</label>
+                            <input type="text" size="30" name="database_column" id="database_column"
+                                   placeholder="Value column" maxlength="255"
+                                   value="{{ variable.databaseColumn }}"
+                                   class="form-control"/>
 
-        <label for="database_where">Database column (display value):</label>
-        <textarea cols="30" name="database_where" id="database_where"
-                  placeholder="Where clause"
-                  class="form-control">{{ variable.databaseWhere }}</textarea>
+                            <label for="database_display">Database column (optional column for the display
+                                value,
+                                defaults
+                                to value column):</label>
+                            <input type="text" size="30" name="database_display" id="database_display"
+                                   placeholder="Display column" maxlength="255"
+                                   value="{{ variable.databaseDisplay }}"
+                                   class="form-control"/>
 
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" name="database_all" value="1"
-                       {% if variable.databaseAll != 0 %}checked="checked"{% endif %}/>
-                Include 'all' option
-            </label>
+                            <label for="database_where">Database column (display value):</label>
+                            <textarea cols="30" name="database_where" id="database_where"
+                                      placeholder="Where clause"
+                                      class="form-control">{{ variable.databaseWhere }}</textarea>
+
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="database_all" value="1"
+                                           {% if variable.databaseAll != 0 %}checked="checked"{% endif %}/>
+                                    Include 'all' option
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <label for="variable_default">Default value:</label>
+                    <input type="text" size="30" name="variable_default" id="variable_default"
+                           placeholder="Default value"
+                           value="{{ variable.defaultValue }}"
+                           class="form-control"/>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="variable_empty" value="1"
+                                      {% if variable.empty != 0 %}checked="checked"{% endif %}/>
+                            Value may be empty
+                        </label>
+                    </div>
+
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="variable_multiple" value="1"
+                                      {% if variable.multiple == 1 %}checked="checked"{% endif %}/>
+                            Multiple values are allowed</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-
-<label for="variable_default">Default value:</label>
-<input type="text" size="30" name="variable_default" id="variable_default"
-       placeholder="Default value"
-       value="{{ variable.defaultValue }}"
-       class="form-control"/>
-
-<div class="checkbox">
-    <label><input type="checkbox" name="variable_empty" value="1"
-                  {% if variable.empty != 0 %}checked="checked"{% endif %}/>
-        Value may be empty
-    </label>
-</div>
-
-<div class="checkbox">
-    <label><input type="checkbox" name="variable_multiple" value="1"
-                  {% if variable.multiple == 1 %}checked="checked"{% endif %}/>
-        Multiple values are allowed</label>
 </div>

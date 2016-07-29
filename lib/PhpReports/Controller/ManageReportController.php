@@ -6,6 +6,7 @@ use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
+use PhpReports\Model\Variable;
 use PhpReports\Model\VariableQuery;
 use PhpReports\PhpReports;
 
@@ -72,7 +73,8 @@ class ManageReportController {
 			'tables' => $tables,
 			'report' => $report,
 			'dataSource' => $report->getDatabaseSource(),
-			'chartTypes' => $chartTypes
+			'chartTypes' => $chartTypes,
+			'newVariable' => new Variable()
 		);
 		echo PhpReports::render('ManageReport/edit', $templateVars);
 	}
