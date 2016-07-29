@@ -98,10 +98,12 @@ class GeneratedReport extends Report {
 				'name' => $variable->getName(),
 				'display' => $variable->getDisplayName(),
 				'type' => $variable->getType(),
-				'default' => $variable->getDefaultValue(),
 				'empty' => $variable->getEmpty(),
 				'multiple' => $variable->getMultiple(),
 			);
+			if ($variable->getDefaultValue()) {
+				$variables[$variable->getName()]['default'] = $variable->getDefaultValue();
+			}
 
 			if ($variable->getType() == VariableTableMap::COL_TYPE_DATERANGE) {
 				$variables[$variable->getName()]['default'] = array(

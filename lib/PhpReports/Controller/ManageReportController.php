@@ -6,6 +6,7 @@ use PhpReports\Model\DatabaseSource;
 use PhpReports\Model\DatabaseSourceQuery;
 use PhpReports\Model\Report;
 use PhpReports\Model\ReportQuery;
+use PhpReports\Model\VariableQuery;
 use PhpReports\PhpReports;
 
 class ManageReportController {
@@ -74,5 +75,12 @@ class ManageReportController {
 			'chartTypes' => $chartTypes
 		);
 		echo PhpReports::render('ManageReport/edit', $templateVars);
+	}
+
+	public function editVariable($id) {
+		$variable = VariableQuery::create()->findOneById((int)$id);
+
+		$templateVars = array('variable' => $variable);
+		echo PhpReports::render('ManageReport/editVariable', $templateVars);
 	}
 }

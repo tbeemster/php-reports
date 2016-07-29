@@ -21,6 +21,15 @@
             $('#hiddenSql').val(editor.getSession().getDocument().getAllLines().join("\n"));
             return true;
         });
+
+        $('#variable_type').on('change', function () {
+            var selectedOption = $(this).val();
+            if (selectedOption == 'select') {
+                $('#databaseOptions').show();
+            } else {
+                $('#databaseOptions').hide();
+            }
+        });
     </script>
 
 {% endblock %}
@@ -131,95 +140,17 @@
                     </button>
                 </div>
                 <div class="collapse" id="reportVariables">
-                    <label for="variable_name">Variable name (used in SQL statement)</label>
-                    <input name="variable_name" value="{{ report.variables.first.name }}" id="variable_name" type="text"
-                           class="form-control"/>
-
-                    <label for="display_name">Display name:</label>
-                    <input type="text" size="30" name="display_name" id="display_name" placeholder="Report name"
-                           value="{{ report.variables.first.displayName }}"
-                           class="form-control"/>
-
-                    <label for="variable_type">Type:</label>
-                    <select name="variable_type" id="variable_type"
-                            class="form-control">
-                        <option value="text"
-                                {% if report.variables.first.type == 'text' %}selected="selected"{% endif %}>
-                            Text
-                        </option>
-                        <option value="select"
-                                {% if report.variables.first.type == 'select' %}selected="selected"{% endif %}>
-                            Select
-                        </option>
-                        <option value="textarea"
-                                {% if report.variables.first.type == 'textarea' %}selected="selected"{% endif %}>
-                            Textarea
-                        </option>
-                        <option value="date"
-                                {% if report.variables.first.type == 'date' %}selected="selected"{% endif %}>
-                            Date
-                        </option>
-                        <option value="daterange"
-                                {% if report.variables.first.type == 'daterange' %}selected="selected"{% endif %}>
-                            Date
-                            range
-                        </option>
-                    </select>
-
-                    <div>
-                        <h3>Popuplate table with database results:</h3>
-
-                        <label for="database_table">Database table:</label>
-                        <input type="text" size="30" name="database_table" id="database_table"
-                               placeholder="Table" maxlength="255"
-                               value="{{ report.variables.first.databaseTable }}"
-                               class="form-control"/>
-
-                        <label for="database_column">Database value column:</label>
-                        <input type="text" size="30" name="database_column" id="database_column"
-                               placeholder="Value column" maxlength="255"
-                               value="{{ report.variables.first.databaseColumn }}"
-                               class="form-control"/>
-
-                        <label for="database_display">Database column (optional column for the display value, defaults
-                            to value column):</label>
-                        <input type="text" size="30" name="database_display" id="database_display"
-                               placeholder="Display column" maxlength="255"
-                               value="{{ report.variables.first.databaseDisplay }}"
-                               class="form-control"/>
-
-                        <label for="database_where">Database column (display value):</label>
-                        <textarea cols="30" name="database_where" id="database_where"
-                                  placeholder="Where clause"
-                                  class="form-control">{{ report.variables.first.databaseWhere }}</textarea>
-
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="database_all" value="1"
-                                       {% if report.variables.first.databaseAll != 0 %}checked="checked"{% endif %}/>
-                                Include 'all' option
-                            </label>
-                        </div>
-                    </div>
-
-                    <label for="variable_default">Default value:</label>
-                    <input type="text" size="30" name="variable_default" id="variable_default"
-                           placeholder="Default value"
-                           value=""
-                           class="form-control"/>
-
-                    <div class="checkbox">
-                        <label><input type="checkbox" name="variable_empty" value="1"
-                                      {% if report.variables.first.empty != 0 %}checked="checked"{% endif %}/> Value may
-                            be
-                            empty</label>
-                    </div>
-
-                    <div class="checkbox">
-                        <label><input type="checkbox" name="variable_multiple" value="1"
-                                      {% if report.variables.first.multiple == 1 %}checked="checked"{% endif %}/>
-                            Multiple values are allowed</label>
-                    </div>
+                    <ul>
+                        {% for variable in report.variables %}
+                            <li>
+                                <a href="{{ base }}/manage-report/edit-variable/{{ variable.id }}" data-remote="true"
+                                   data-toggle="modal" class="btn btn-default">
+                                    Launch Modal
+                                </a>
+                                <a href="{{ base }}/manage-report/edit-variable/{{ variable.id }}">{{ variable.displayName }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
 
                 <input type="submit" value="Update" class="btn btn-primary"/>
