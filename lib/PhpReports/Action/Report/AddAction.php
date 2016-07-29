@@ -36,7 +36,7 @@ class AddAction extends Action {
 		$report->setName($this->name)
 			->setType($this->type)
 			->setDatabaseSource($this->dataSource);
-
+		$report->setSqlMode(Report::SQL_MODE_MANUAL);
 		$report->save();
 
 		\Flight::redirect(PhpReports::$request->base . '/manage-report/edit/?report=' . $report->getId());

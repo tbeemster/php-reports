@@ -3,7 +3,6 @@ use PhpReports\Model\Base\DatabaseColumnQuery;
 use PhpReports\Model\DatabaseJoin;
 use PhpReports\Model\DatabaseTable;
 use PhpReports\Model\Report as ReportModel;
-use PhpReports\Report;
 
 class GeneratedReportType extends PdoReportType {
 

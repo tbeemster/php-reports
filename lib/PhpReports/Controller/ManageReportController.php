@@ -45,6 +45,7 @@ class ManageReportController {
 		$dbJoins = DatabaseJoinQuery::create()->filterByDatabaseSource($report->getDatabaseSource())->find();
 
 		$chartTypes = array(
+			'Table',
 			'LineChart',
 			'GeoChart',
 			'AnnotatedTimeLine',

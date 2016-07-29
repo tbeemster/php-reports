@@ -63,6 +63,11 @@
 
                 <h1 class="visible-phone">Edit report</h1>
 
+                <label for="name">Report name:</label>
+                <input type="text" size="30" name="name" id="name" placeholder="Report name"
+                       value="{{ report.name }}"
+                       class="form-control"/>
+
                 <label for="sql_mode">SQL Mode:</label>
                 <div class="radio">
                     <label><input type="radio" name="sql_mode" id="sql_mode" value="0"
@@ -107,10 +112,6 @@
                             </option>
                         {% endfor %}
                     </select>
-                    <label for="name">Report name:</label>
-                    <input type="text" size="30" name="name" id="name" placeholder="Report name"
-                           value="{{ report.name }}"
-                           class="form-control"/>
 
                     <label for="h_axis_title">Horizontal Axis Title:</label>
                     <input type="text" size="30" name="h_axis_title" id="h_axis_title"

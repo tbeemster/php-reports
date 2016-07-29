@@ -18,6 +18,12 @@ use Propel\Runtime\Connection\ConnectionInterface;
 class Report extends BaseReport
 {
 
+	/** @var boolean */
+	const SQL_MODE_GENERATED = false;
+
+	/** @var boolean */
+	const SQL_MODE_MANUAL = true;
+
 	public function preInsert(ConnectionInterface $con = null) {
 		$this->setCreatedAt(time());
 		$this->setUpdatedAt(time());
