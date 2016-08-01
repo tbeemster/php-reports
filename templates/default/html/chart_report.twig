@@ -61,14 +61,17 @@
 					sizeAxis: {minValue: 1,  maxSize:  10},
 				{% endif %}
 				displayAnnotations: true,
+                {% if chart.pointsVisible %}
+                pointsVisible: true,
+                {% endif %}
                 series: series_{{chart.num}},
 				colors: [],
-                {% if report.hAxisTitle %}
-                    hAxis: {title: '{{ report.hAxisTitle }}'},
+                {% if report.charts.first.hAxisTitle %}
+                hAxis: {title: '{{ report.charts.first.hAxisTitle }}'},
                 {% endif %}
-                {% if report.hAxisTitle %}
+                {% if report.charts.first.hAxisTitle %}
                     vAxis: {
-                        title: '{{ report.vAxisTitle }}',
+                        title: '{{ report.charts.first.vAxisTitle }}',
                         minValue: 0,
                         maxValue: 100
                     },

@@ -55,6 +55,15 @@
                     <div id="databaseOptions{{ variable.id }}"
                          {% if variable.type != 'select' %}style="display: none;"{% endif %}>
                             <h3>Popuplate table with database results:</h3>
+                        <blockquote>
+                            SELECT
+                            DISTINCT `{{ variable.databaseColumn }}` as val,
+                            `{{ variable.databaseDisplay }}` as disp
+                            FROM {{ variable.databaseTable }}
+                            {% if variable.databaseWhere %}
+                                WHERE {{ variable.databaseWhere }}
+                            {% endif %}
+                        </blockquote>
 
                             <label for="database_table">Database table:</label>
                             <input type="text" size="30" name="database_table" id="database_table"
@@ -77,7 +86,7 @@
                                    value="{{ variable.databaseDisplay }}"
                                    class="form-control"/>
 
-                            <label for="database_where">Database column (display value):</label>
+                        <label for="database_where">Where clause:</label>
                             <textarea cols="30" name="database_where" id="database_where"
                                       placeholder="Where clause"
                                       class="form-control">{{ variable.databaseWhere }}</textarea>

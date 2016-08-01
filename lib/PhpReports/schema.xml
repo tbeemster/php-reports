@@ -92,13 +92,9 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="varchar" size="255" required="false"/>
         <column name="type" type="varchar" size="255" required="true"/>
-        <column name="h_axis_title" type="varchar" size="255" required="false"/>
-        <column name="v_axis_title" type="varchar" size="255" required="false"/>
         <column name="sql_mode" type="boolean" required="false"/>
         <column name="sql_code" type="longvarchar" required="false"/>
         <column name="database_source_id" type="integer" required="true"/>
-        <column name="chart_image" type="longvarchar" required="false"/>
-        <column name="chart_image_updated_at" type="timestamp" required="false"/>
 
         <column name="created_at" type="timestamp"/>
         <column name="updated_at" type="timestamp"/>
@@ -106,6 +102,30 @@
             <reference local="database_source_id" foreign="id"/>
         </foreign-key>
         <behavior name="archivable"/>
+    </table>
+
+    <table name="report_chart" isCrossRef="true">
+        <column name="report_id" type="integer" primaryKey="true"/>
+        <column name="chart_id" type="integer" primaryKey="true"/>
+        <foreign-key foreignTable="report">
+            <reference local="report_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="chart">
+            <reference local="chart_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="chart">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="type" type="varchar" size="255" required="true"/>
+        <column name="h_axis_title" type="varchar" size="255" required="false"/>
+        <column name="v_axis_title" type="varchar" size="255" required="false"/>
+        <column name="points_visible" type="boolean" required="false"/>
+        <column name="chart_image" type="longvarchar" required="false"/>
+        <column name="chart_image_updated_at" type="timestamp" required="false"/>
+
+        <column name="created_at" type="timestamp"/>
+        <column name="updated_at" type="timestamp"/>
     </table>
 
     <table name="report_column" isCrossRef="true">

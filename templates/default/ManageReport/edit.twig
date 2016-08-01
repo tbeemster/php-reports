@@ -126,7 +126,7 @@
                     <select name="report_type" id="report_type" class="form-control">
                         {% for chartType in chartTypes %}
                             <option name="{{ chartType }}"
-                                    {% if report.type == chartType %}
+                                    {% if report.charts.first.type == chartType %}
                                         selected="selected"
                                     {% endif %}
                             >
@@ -138,13 +138,20 @@
                     <label for="h_axis_title">Horizontal Axis Title:</label>
                     <input type="text" size="30" name="h_axis_title" id="h_axis_title"
                            placeholder="Horizontal Axis Title"
-                           value="{{ report.hAxisTitle }}"
+                           value="{{ report.charts.first.hAxisTitle }}"
                            class="form-control"/>
 
                     <label for="v_axis_title">Vertical Axis Title:</label>
                     <input type="text" size="30" name="v_axis_title" id="v_axis_title" placeholder="Vertical Axis Title"
-                           value="{{ report.vAxisTitle }}"
+                           value="{{ report.charts.first.vAxisTitle }}"
                            class="form-control"/>
+
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="points_visible"
+                                   {% if report.charts.first.pointsVisible %}checked="checked"{% endif %}/>
+                            Points Visible?</label>
+                    </div>
                 </div>
                 <input type="submit" value="Update" class="btn btn-success"/>
             </form>

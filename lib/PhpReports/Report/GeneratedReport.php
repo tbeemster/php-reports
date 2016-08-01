@@ -2,6 +2,7 @@
 namespace PhpReports\Report;
 
 use PhpReports\Model\Base\ReportQuery;
+use PhpReports\Model\Chart;
 use PhpReports\Model\Map\VariableTableMap;
 use PhpReports\Model\Report as ReportModel;
 use PhpReports\Model\Variable;
@@ -134,13 +135,15 @@ class GeneratedReport extends Report {
 			return array();
 		}
 
-		$charts = array(
-			0 => array(
+		/** @var Chart $chart */
+		foreach ($report->getCharts() as $chart) {
+			$charts[] = array(
 				'type' => $report->getType(),
 				'dataset' => 0,
 				'title' => $report->getName(),
-				'h-axis-title' => $report->getHAxisTitle(),
-				'v-axis-title' => $report->getVAxisTitle(),
+				'h-axis-title' => $chart->getHAxisTitle(),
+				'v-axis-title' => $chart->getVAxisTitle(),
+				'pointsVisible' => $chart->getPointsVisible(),
 				'width' => "100%",
 				'height' => "400px",
 				'xhistogram' => false,
@@ -159,8 +162,9 @@ class GeneratedReport extends Report {
 				'options' => array(),
 				'num' => 1,
 				'Rows' => array(),
-			)
-		);
+			);
+		}
+
 		$i = 0;
 		foreach ($report->getDatabaseColumnDataTypes() as $column) {
 			$charts[0]['columns'][] = $i;
