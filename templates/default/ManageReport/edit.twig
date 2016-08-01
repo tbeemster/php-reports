@@ -146,37 +146,34 @@
                            value="{{ report.vAxisTitle }}"
                            class="form-control"/>
                 </div>
-
-                <h3>
-                    Variables
-                    <button type="button" class="btn btn-default" data-toggle="modal"
-                            data-target=".variableModal">
-                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Variable
-                    </button>
-                </h3>
-                    <ul>
-                        {% for variable in report.variables %}
-                            <li>
-                                {{ variable.displayName }}
-                                <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
-                                        data-target=".variableModal{{ variable.id }}">
-                                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit
-                                </button>
-                                <form action="" method="post" style="display: inline-block;">
-                                    <input type="hidden" name="subject" value="report"/>
-                                    <input type="hidden" name="action" value="delete-variable"/>
-                                    <input type="hidden" name="variable" value="{{ variable.id }}"/>
-                                    <button type="button" class="btn btn-danger btn-xs" data-toggle="modal"
-                                            data-target=".variableModal{{ variable.id }}">
-                                        <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete
-                                    </button>
-                                </form>
-                            </li>
-                        {% endfor %}
-                    </ul>
-
                 <input type="submit" value="Update" class="btn btn-success"/>
             </form>
+            <h3>
+                Variables
+                <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target=".variableModal">
+                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> Add Variable
+                </button>
+            </h3>
+            <ul>
+                {% for variable in report.variables %}
+                    <li>
+                        {{ variable.displayName }}
+                        <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                data-target=".variableModal{{ variable.id }}">
+                            <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit
+                        </button>
+                        <form action="" method="post" style="display: inline-block;">
+                            <input type="hidden" name="subject" value="report"/>
+                            <input type="hidden" name="action" value="delete-variable"/>
+                            <input type="hidden" name="variable" value="{{ variable.id }}"/>
+                            <button type="submit" class="btn btn-danger btn-xs">
+                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
         <div class="col-lg-6 col-md-6">
             <iframe src="http://dev.yardinternet.nl/timothe/php-reports/report/chart/?report={{ report.id }}/&amp;content_only=true"
