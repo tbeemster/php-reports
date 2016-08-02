@@ -139,7 +139,8 @@ class UpdateVariableAction extends Action {
 			->setEmpty($this->mayBeEmpty)
 			->setMultiple($this->multipleValuesAllowed);
 		if ($this->type == VariableTableMap::COL_TYPE_SELECT && $this->populateFromDatabase) {
-			$this->variable->setDatabaseTable($this->databaseTable)
+			$this->variable->setDatabasePopulate($this->populateFromDatabase)
+				->setDatabaseTable($this->databaseTable)
 				->setDatabaseColumn($this->databaseColumn)
 				->setDatabaseDisplay($this->databaseDisplay)
 				->setDatabaseWhere($this->databaseWhere)
