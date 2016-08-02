@@ -51,10 +51,10 @@ class GeneratedReport extends Report {
 		$this->headers[] = 'Rollup';
 		$this->options['Type'] = 'Generated';
 		$this->options['Filters'] = array();
-		$this->options['Variables'] = self::extractVariables($report);
+		$this->options['Variables'] = $this->extractVariables();
 		$this->options['Includes'] = array();
 		$this->options['Name'] = $report->getName();
-		$this->options['Charts'] = self::extractCharts($report);
+		$this->options['Charts'] = $this->extractCharts();
 		$this->options['has_charts'] = (count($this->options['Charts']) > 0 ? true : false);
 		$this->is_ready = true;
 	}
@@ -86,15 +86,15 @@ class GeneratedReport extends Report {
 	 * @return array
 	 * @throws \Propel\Runtime\Exception\PropelException
 	 */
-	public static function extractVariables(ReportModel $report) {
-		if ($report->countVariables() == 0) {
+	public function extractVariables() {
+		if ($this->report->countVariables() == 0) {
 			return array();
 		}
 
 		$variables = array();
 
 		/** @var Variable $variable */
-		foreach ($report->getVariables() as $variable) {
+		foreach ($this->report->getVariables() as $variable) {
 			$variables[$variable->getName()] = array(
 				'name' => $variable->getName(),
 				'display' => $variable->getDisplayName(),
@@ -126,21 +126,17 @@ class GeneratedReport extends Report {
 
 	/**
 	 * Extracts the chart(s) from the Report Model and returns them as an array
-	 * @param ReportModel $report
 	 * @return array
 	 */
-	public static function extractCharts(ReportModel $report) {
-		/** @todo separate chart as its own entity, so countables are possible */
-		if (false) {
-			return array();
-		}
+	public function extractCharts() {
+		$charts = array();
 
 		/** @var Chart $chart */
-		foreach ($report->getCharts() as $chart) {
+		foreach ($this->report->getCharts() as $chart) {
 			$charts[] = array(
-				'type' => $report->getType(),
+				'type' => $this->report->getType(),
 				'dataset' => 0,
-				'title' => $report->getName(),
+				'title' => $this->report->getName(),
 				'h-axis-title' => $chart->getHAxisTitle(),
 				'v-axis-title' => $chart->getVAxisTitle(),
 				'pointsVisible' => $chart->getPointsVisible(),
@@ -166,7 +162,7 @@ class GeneratedReport extends Report {
 		}
 
 		$i = 0;
-		foreach ($report->getDatabaseColumnDataTypes() as $column) {
+		foreach ($this->report->getDatabaseColumnDataTypes() as $column) {
 			$charts[0]['columns'][] = $i;
 			$charts[0]['datatypes'][] = $column[1];
 			$i++;
