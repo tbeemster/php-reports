@@ -18,9 +18,13 @@ class AddReportAction extends Action {
 	/** @var Report */
 	protected $report;
 
+	/** @var string */
+	protected $variables;
+
 	public function collect() {
 		$this->dashboard = DashboardQuery::create()->findOneById((int)$this->request->data['dashboard']);
 		$this->report = ReportQuery::create()->findOneById((int)$this->request->data['report']);
+		$this->variables = $this->request->data['variables'];
 	}
 
 	public function validate() {
@@ -37,6 +41,7 @@ class AddReportAction extends Action {
 		$dashboardReport = new DashboardReport();
 		$dashboardReport->setDashboard($this->dashboard);
 		$dashboardReport->setReport($this->report);
+		$dashboardReport->setVariables($this->variables);
 		$dashboardReport->setType(DashboardReportTableMap::COL_TYPE_CHART);
 		$this->dashboard->addDashboardReport($dashboardReport);
 		$this->dashboard->save();

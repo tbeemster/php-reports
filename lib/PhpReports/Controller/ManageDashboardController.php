@@ -6,6 +6,7 @@ use PhpReports\Model\DashboardQuery;
 use PhpReports\Model\DashboardReport;
 use PhpReports\Model\DashboardReportQuery;
 use PhpReports\Model\DatabaseSourceQuery;
+use PhpReports\Model\ReportQuery;
 use PhpReports\PhpReports;
 
 class ManageDashboardController {
@@ -59,5 +60,14 @@ class ManageDashboardController {
 	public function showAll() {
 		$dashboards = DashboardQuery::create()->find();
 		echo PhpReports::render('ManageDashboard/showAll', array('dashboards' => $dashboards));
+	}
+
+	public function addReport() {
+		$request = \Flight::request();
+		$dashboards = DashboardQuery::create()->find();
+		$reportId = (int)$request->query['report'];
+		$report = ReportQuery::create()->findOneById($reportId);
+		$variables = $request->query['macros'];
+		echo PhpReports::render('ManageDashboard/addReport', array('dashboards' => $dashboards, 'report' => $report, 'serializedVariables' => serialize($variables), 'variables' => $variables));
 	}
 }

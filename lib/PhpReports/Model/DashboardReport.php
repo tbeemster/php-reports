@@ -22,4 +22,23 @@ class DashboardReport extends BaseDashboardReport
 		return DashboardReportTableMap::getValueSet(DashboardReportTableMap::COL_TYPE);
 	}
 
+	public function getVariables() {
+		$variables = parent::getVariables();
+		$variables = unserialize($variables);
+
+		$macros = '';
+		foreach ($variables as $key => $value) {
+			if (is_array($value)) {
+				foreach ($value as $keyy => $val) {
+					$macros .= '&macros[' . $key . '][]=' . $val;
+				}
+			}
+			else {
+				$macros .= '&macros[' . $key . ']=' . $value;
+
+			}
+		}
+		return $macros;
+	}
+
 }

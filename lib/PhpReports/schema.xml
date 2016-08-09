@@ -181,6 +181,7 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="dashboard_id" type="integer"/>
         <column name="report_id" type="integer"/>
+        <column name="variables" type="longvarchar"/>
         <column name="type" type="enum" valueSet="chart,table"/>
         <foreign-key foreignTable="dashboard">
             <reference local="dashboard_id" foreign="id"/>

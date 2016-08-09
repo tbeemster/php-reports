@@ -1,0 +1,39 @@
+{% extends "html/page.twig" %}
+
+{% block title %}Add report to a Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div id="table_of_contents" class="col-lg-2 col-md-3 hidden-xs hidden-sm bs-sidebar">
+            <h2>Add Report to Dashboard</h2>
+            <form method="post">
+                <input type="hidden" name="subject" value="dashboard"/>
+                <input type="hidden" name="action" value="add-report"/>
+                <input type="hidden" name="report" value="{{ report.id }}"/>
+                <input type="hidden" name="variables" value="{{ serializedVariables }}"/>
+
+                <label for="report">Dashboard</label><br/>
+
+                <select name="dashboard" class="form-control">
+                    {% for dashboard in dashboards %}
+                        <option value="{{ dashboard.id }}">{{ dashboard.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <b>Report:</b> {{ report.name }}
+
+                <input type="submit" value="Add Report" class="btn btn-default"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
