@@ -19,7 +19,7 @@
         "ext-pdo": "*",
         "twig/twig": "1.*",
         "swiftmailer/swiftmailer": "5.*",
-        "mikecao/flight": "dev-master",
+        "mikecao/flight": "dev-master@dev",
         "jdorn/sql-formatter": "dev-master",
         "jdorn/file-system-cache": "dev-master",
         "phpoffice/phpexcel": "dev-develop",
