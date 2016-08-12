@@ -26,7 +26,7 @@
         "twig/twig": "1.*",
         "swiftmailer/swiftmailer": "5.*",
         "mikecao/flight": "*",
-        "jdorn/sql-formatter": "dev-master",
+        "jdorn/sql-formatter": "dev-master@dev",
         "jdorn/file-system-cache": "dev-master@dev",
         "phpoffice/phpexcel": "dev-develop@dev",
         "adodb/adodb-php": "dev-master@dev",
