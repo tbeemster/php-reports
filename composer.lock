@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "548fc035067d10011789b66bc8d74958",
-    "content-hash": "abc10d050f05fa330c1f5712ab1ec1d1",
+    "hash": "986f030058abd9b5ea2612547580e2d6",
+    "content-hash": "be1d5b7f777696ffe28fd86ff7bf1631",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -158,20 +158,20 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jdorn/sql-formatter.git",
-                "reference": "7ef9b85961956aa572413693e1194b60f50ab9ab"
+                "url": "https://github.com/tbeemster/sql-formatter.git",
+                "reference": "09deb4f8b101d4df0ae2de210cbd0ad290841c59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jdorn/sql-formatter/zipball/7ef9b85961956aa572413693e1194b60f50ab9ab",
-                "reference": "7ef9b85961956aa572413693e1194b60f50ab9ab",
+                "url": "https://api.github.com/repos/tbeemster/sql-formatter/zipball/09deb4f8b101d4df0ae2de210cbd0ad290841c59",
+                "reference": "09deb4f8b101d4df0ae2de210cbd0ad290841c59",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "~4.6"
             },
             "bin": [
                 "bin/sql-formatter"
@@ -187,7 +187,6 @@
                     "lib"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -204,7 +203,10 @@
                 "highlight",
                 "sql"
             ],
-            "time": "2015-08-30 16:36:01"
+            "support": {
+                "source": "https://github.com/tbeemster/sql-formatter/tree/master"
+            },
+            "time": "2016-08-12 08:27:13"
         },
         {
             "name": "lespoilus/spyc",

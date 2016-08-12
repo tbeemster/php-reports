@@ -14,6 +14,12 @@
             "email": "timothe@yard.nl"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tbeemster/sql-formatter"
+        }
+    ],
     "require": {
         "php": ">=5.3",
         "ext-pdo": "*",
