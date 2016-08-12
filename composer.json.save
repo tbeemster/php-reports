@@ -38,6 +38,9 @@
         "files": [
             "lib/adodb/pivottable.inc.php"
         ],
+        "classmap": [
+            "vendor/jdorn/file-system-cache/"
+        ],
         "psr-4": {
             "PhpReports\\": "lib/PhpReports/"
         }
